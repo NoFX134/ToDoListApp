@@ -1,35 +1,36 @@
-package ru.yandexschool.todolist.presentation
+package ru.yandexschool.todolist.presentation.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.yandexschool.todolist.R
-import ru.yandexschool.todolist.data.ToDoItemRepository
 import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
+import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
 
 class ToDoItemListFragment :
     BaseFragment<FragmentToDoItemListBinding>(FragmentToDoItemListBinding::inflate) {
 
+    private lateinit var vm: ItemListViewModel
+    val bundle = Bundle()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val toDoAdapter = ToDoItemListAdapter()
-        val toDoItemRepository = ToDoItemRepository()
+
+        vm = (activity as MainActivity).vm
         binding.rvToDoRecyclerView.apply {
             adapter = toDoAdapter
             layoutManager = LinearLayoutManager(activity)
-            lifecycleScope.launch {
-                toDoItemRepository.toDoItemListFlow.collectLatest { data ->
-                    toDoAdapter.submitList(data)
-                }
-            }
+        }
+        vm.toDoItemListLiveData.observe(viewLifecycleOwner) { list ->
+            toDoAdapter.submitList(list)
+
         }
         toDoAdapter.setOnItemClickListener {
-            val bundle = Bundle().apply {
-                putSerializable("todoItem", it)
+            bundle.apply {
+                putSerializable("toDoItem", it)
+                putInt("position", toDoAdapter.itemCount)
             }
             findNavController().navigate(
                 R.id.action_toDoItemListFragment_to_toDoAddFragment,
@@ -42,7 +43,14 @@ class ToDoItemListFragment :
 
     private fun goToAddFab() {
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.action_toDoItemListFragment_to_toDoAddFragment)
+            bundle.apply {
+                putSerializable("toDoItem", null)
+                findNavController().navigate(
+                    R.id.action_toDoItemListFragment_to_toDoAddFragment,
+                    bundle
+                )
+
+            }
         }
     }
 }

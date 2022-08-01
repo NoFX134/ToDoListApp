@@ -1,62 +1,116 @@
 package ru.yandexschool.todolist.presentation.ui
 
+import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import ru.yandexschool.todolist.R
+import ru.yandexschool.todolist.data.ToDoItemRepository
+import ru.yandexschool.todolist.data.model.Importance
+import ru.yandexschool.todolist.data.model.ToDoItem
+import ru.yandexschool.todolist.databinding.FragmentToDoAddBinding
+import ru.yandexschool.todolist.presentation.utils.dateToString
+import java.text.SimpleDateFormat
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBinding::inflate) {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ToDoAddFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ToDoAddFragment : Fragment() {
+    private lateinit var vm: ItemListViewModel
+    val args: ToDoAddFragmentArgs by navArgs()
 
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val toDoItem = args.toDoItem
+        val position = args.position
+        val cal = Calendar.getInstance()
+        val vm = (activity as MainActivity).vm
+
+        initSpinner()
+
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                cal.set(Calendar.YEAR, year)
+                cal.set(Calendar.MONTH, monthOfYear)
+                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                val myFormat = "dd.MM.yyyy" // mention the format you need
+                val sdf = SimpleDateFormat(myFormat, Locale.US)
+                binding.tvDeadlineDate.text = sdf.format(cal.time)
+            }
+
+        binding.swDatePicker.setOnClickListener {
+            context?.let { it1 ->
+                DatePickerDialog(
+                    it1, dateSetListener,
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)
+                ).show()
+            }
+        }
+
+        if (toDoItem != null) {
+            binding.etToDo.setText(args.toDoItem?.text ?: "")
+            when (toDoItem.importance) {
+                Importance.LOW -> binding.spImportance.setSelection(0)
+                Importance.BASIC -> binding.spImportance.setSelection(1)
+                Importance.IMPORTANT -> binding.spImportance.setSelection(2)
+
+            }
+            binding.tvDeadlineDate.text = toDoItem.deadline.dateToString("DD-MM-YYYY")
+        }
+
+
+        binding.tvSave.setOnClickListener {
+            vm.addToDoItem(createToDoItem(), position)
+            Log.d("TAG", createToDoItem().text)
+            findNavController().popBackStack()
+        }
+        binding.ivClose.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding.tvDelete.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_to_do_add, container, false)
-    }
 
-    companion object {
+    private fun initSpinner() {
 
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ToDoAddFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ToDoAddFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        context?.let {
+            ArrayAdapter.createFromResource(
+                it,
+                R.array.importance_array,
+                android.R.layout.simple_spinner_item
+            ).also { adapter ->
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                binding.spImportance.adapter = adapter
+                binding.spImportance.setSelection(1)
             }
+        }
     }
+
+    private fun createToDoItem(): ToDoItem {
+        return ToDoItem(
+            id = binding.etToDo.text.toString(),
+            text = binding.etToDo.text.toString(),
+            importance =
+            when (binding.spImportance.selectedItem.toString()) {
+                "Нет" -> Importance.LOW
+                "Низкий" -> Importance.BASIC
+                "!!Высокий" -> Importance.IMPORTANT
+                else -> Importance.BASIC
+            },
+            deadline = Date(),
+            createdAt = Date(),
+            changedAt = Date()
+        )
+    }
+
+
 }
+

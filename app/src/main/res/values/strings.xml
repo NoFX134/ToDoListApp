@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">ToDoList</string>
+    <string name="app_name">ToDo List</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="appName">Мои дела</string>
+    <string name="done">Выполнено - 5</string>
+    <string name="add_to_do">add_to_do</string>
+    <string name="close">close</string>
+    <string name="Save">СОХРАНИТЬ</string>
+    <string name="buy_something">Купить что-то</string>
+    <string name="importance">Важность</string>
+    <string name="Deadline">Сделать до</string>
+    <string name="Delete">Удалить</string>
+    <string-array name="importance_array">
+        <item>Нет</item>
+        <item>Низкий</item>
+        <item>!!Высокий</item>
+
+    </string-array>
 </resources>

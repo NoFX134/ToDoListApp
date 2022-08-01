@@ -1,4 +1,11 @@
 package ru.yandexschool.todolist.presentation.utils
 
-class `1` {
+import java.text.SimpleDateFormat
+import java.util.*
+
+fun Date.dateToString(format: String): String {
+
+    val dateFormatter = SimpleDateFormat(format, Locale.getDefault())
+    return dateFormatter.format(this)
+
 }
