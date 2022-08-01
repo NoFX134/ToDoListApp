@@ -1,7 +1,8 @@
-package ru.yandexschool.todolist
+package ru.yandexschool.todolist.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import ru.yandexschool.todolist.R
 
 class MainActivity : AppCompatActivity() {
 
