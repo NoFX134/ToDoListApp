@@ -12,12 +12,11 @@ class ToDoItemListFragment :
     BaseFragment<FragmentToDoItemListBinding>(FragmentToDoItemListBinding::inflate) {
 
     private lateinit var vm: ItemListViewModel
-    val bundle = Bundle()
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val toDoAdapter = ToDoItemListAdapter()
-
         vm = (activity as MainActivity).vm
         binding.rvToDoRecyclerView.apply {
             adapter = toDoAdapter
@@ -27,10 +26,12 @@ class ToDoItemListFragment :
             toDoAdapter.submitList(list)
 
         }
+
         toDoAdapter.setOnItemClickListener {
+            val bundle = Bundle()
             bundle.apply {
                 putSerializable("toDoItem", it)
-                putInt("position", toDoAdapter.itemCount)
+                putSerializable("editFlag", true)
             }
             findNavController().navigate(
                 R.id.action_toDoItemListFragment_to_toDoAddFragment,
@@ -43,13 +44,14 @@ class ToDoItemListFragment :
 
     private fun goToAddFab() {
         binding.fab.setOnClickListener {
+            val bundle = Bundle()
             bundle.apply {
                 putSerializable("toDoItem", null)
+                putSerializable("editFlag", false)
                 findNavController().navigate(
                     R.id.action_toDoItemListFragment_to_toDoAddFragment,
                     bundle
                 )
-
             }
         }
     }

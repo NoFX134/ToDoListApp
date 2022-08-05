@@ -13,18 +13,23 @@ class ItemListViewModel(private val toDoItemRepository: ToDoItemRepository) : Vi
     val toDoItemListLiveData: LiveData<List<ToDoItem>> = _toDoItemListLiveData
 
     init {
-        _toDoItemListLiveData.postValue(toDoItemRepository.toDoItemList)
+        _toDoItemListLiveData.postValue(toDoItemRepository.fetchToDoItem())
     }
 
-    fun addToDoItem(toDoItem: ToDoItem, position:Int) {
-        if (position==-1) {
-            toDoItemRepository.addTodoItem(toDoItem)
-            Log.d("TAG1", toDoItemRepository.toDoItemList.toString())
-            _toDoItemListLiveData.postValue(toDoItemRepository.toDoItemList)
-        }
-        else{
-            toDoItemRepository.editTodoItem(toDoItem,position)
-        }
+    fun addToDoItem(toDoItem: ToDoItem) {
+        toDoItemRepository.addTodoItem(toDoItem)
+        _toDoItemListLiveData.postValue(toDoItemRepository.fetchToDoItem())
     }
+
+    fun deleteToDoItem(toDoItem: ToDoItem) {
+        toDoItemRepository.deleteTodoItem(toDoItem)
+    }
+
+    fun editToDoItem(toDoItem: ToDoItem) {
+        toDoItemRepository.editTodoItem(toDoItem)
+
+    }
+
+
 
 }

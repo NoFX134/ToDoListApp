@@ -4,7 +4,6 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.content.res.AppCompatResources.*
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -21,14 +20,15 @@ class ToDoItemListAdapter :
 
     fun setOnItemClickListener(listener: (ToDoItem) -> Unit) {
         onItemClickListener = listener
+
     }
 
-    inner class ToDoItemViewHolder(itemView: View) :
+    class ToDoItemViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
 
         private var binding: ToDoCellBinding = ToDoCellBinding.bind(itemView)
 
-        fun bind(toDoItem: ToDoItem) = with(binding) {
+        fun bind(toDoItem: ToDoItem, onItemClickListener: ((ToDoItem) -> Unit)?) = with(binding) {
             tvToDoText.text = toDoItem.text
             itemView.setOnClickListener {
                 onItemClickListener?.let {
@@ -53,7 +53,8 @@ class ToDoItemListAdapter :
                     itemView.context,
                     R.drawable.check_box_done
                 )
-                tvToDoText.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+
+                tvToDoText.paint.flags = Paint.STRIKE_THRU_TEXT_FLAG
                 tvToDoText.setTextColor(itemView.context.getColor(R.color.gray_light))
             }
         }
@@ -68,18 +69,18 @@ class ToDoItemListAdapter :
     }
 
     override fun onBindViewHolder(holder: ToDoItemViewHolder, position: Int) {
-        getItem(position).let { holder.bind(it) }
+        getItem(position).let { holder.bind(it,onItemClickListener) }
     }
 }
 
 class DiffCallback : DiffUtil.ItemCallback<ToDoItem>() {
 
     override fun areItemsTheSame(oldItem: ToDoItem, newItem: ToDoItem): Boolean {
-        return oldItem == newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: ToDoItem, newItem: ToDoItem): Boolean {
-        return areItemsTheSame(oldItem, newItem)
+        return oldItem == newItem
     }
 
 
