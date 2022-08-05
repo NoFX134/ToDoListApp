@@ -20,15 +20,17 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
     private val args: ToDoAddFragmentArgs by navArgs()
     private var editFlag = false
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val toDoItem = args.toDoItem
-        editFlag = args.editFlag
+        val toDoItemEdit = args.toDoItem
         val cal = Calendar.getInstance()
+        editFlag = args.editFlag
         vm = (activity as MainActivity).vm
 
         initSpinner()
+
 
         val dateSetListener =
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
@@ -52,20 +54,21 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
                 }
         }
 
-        if (toDoItem != null) {
+        if (toDoItemEdit != null) {
             binding.etToDo.setText(args.toDoItem?.text ?: "")
-            when (toDoItem.importance) {
+            when (toDoItemEdit.importance) {
                 Importance.LOW -> binding.spImportance.setSelection(0)
                 Importance.BASIC -> binding.spImportance.setSelection(1)
                 Importance.IMPORTANT -> binding.spImportance.setSelection(2)
 
             }
-            binding.tvDeadlineDate.text = toDoItem.deadline?.dateToString("DD-MM-YYYY")
+            binding.tvDeadlineDate.text = toDoItemEdit.deadline?.dateToString("dd-mm-yyyy")
         }
 
 
         binding.tvSave.setOnClickListener {
-            saveToDoItem(createToDoItem(toDoItem))
+
+            saveToDoItem(createToDoItem(toDoItemEdit))
             findNavController().popBackStack()
         }
 
@@ -74,8 +77,8 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         }
 
         binding.tvDelete.setOnClickListener {
-            if (toDoItem != null) {
-                vm.deleteToDoItem(toDoItem)
+            if (toDoItemEdit != null) {
+                vm.deleteToDoItem(toDoItemEdit)
             }
             findNavController().popBackStack()
         }
@@ -98,40 +101,19 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
 
     private fun saveToDoItem(toDoItem: ToDoItem) {
         if (!editFlag) {
-            vm.addToDoItem(createToDoItem(toDoItem))
+            vm.addToDoItem(toDoItem)
         } else {
             vm.editToDoItem(createToDoItem(toDoItem))
         }
     }
 
-    private fun createToDoItem(toDoItem: ToDoItem?): ToDoItem {
-        if (!editFlag) {
-            return ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = binding.etToDo.text.toString(),
-                importance =
-                when (binding.spImportance.selectedItemPosition) {
-                    0 -> Importance.LOW
-                    1 -> Importance.BASIC
-                    2 -> Importance.IMPORTANT
-                    else -> Importance.BASIC
-                },
-                createdAt = Date(),
-            )
-        } else return ToDoItem(
-            id = toDoItem?.id ?: UUID.randomUUID().toString(),
-            text = binding.etToDo.text.toString(),
-            importance =
-            when (binding.spImportance.selectedItemPosition) {
-                0 -> Importance.LOW
-                1 -> Importance.BASIC
-                2 -> Importance.IMPORTANT
-                else -> Importance.BASIC
-            },
-            createdAt = Date(),
-        )
+
+    private fun createToDoItem(toDoItemEdit: ToDoItem?): ToDoItem {
+        val text = binding.etToDo.text.toString()
+        val importance = binding.spImportance.selectedItemPosition
+        val toDoItemId = toDoItemEdit?.id.toString()
+        val toDoItemCreatedAt = toDoItemEdit?.createdAt
+        return vm.createToDoItem(editFlag, text, importance, toDoItemId, toDoItemCreatedAt)
     }
-
-
 }
 

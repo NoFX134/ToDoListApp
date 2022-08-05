@@ -10,7 +10,7 @@ data class ToDoItem(
     val importance: Importance = Importance.BASIC,
     val deadline: Date? = null,
     val done: Boolean = false,
-    val createdAt: Date = Date(),
+    val createdAt: Date? = Date(),
     val changedAt: Date? = null
 ): Serializable
 
