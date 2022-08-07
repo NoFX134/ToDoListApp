@@ -5,31 +5,59 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_importance"
+        android:layout_width="20dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/arrow_down"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/tv_toDoText"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cb_check"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,ImageContrastCheck" />
 
     <CheckBox
         android:id="@+id/cb_check"
-        android:layout_width="26dp"
-        android:layout_height="22dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="19dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
+        android:theme="@style/MyCheckBox"
+        app:layout_constraintEnd_toStartOf="@+id/iv_importance"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/cb_check_red"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="10dp"
+        android:theme="@style/MyCheckBoxRed"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/iv_importance"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_toDoText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
         android:layout_marginTop="14dp"
-        android:layout_marginEnd="52dp"
+        android:layout_marginEnd="15dp"
         android:ellipsize="end"
         android:gravity="bottom"
-        android:textColor="@color/black"
         android:maxLines="3"
+        android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_toDoInfo"
+        app:layout_constraintStart_toEndOf="@+id/iv_importance"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Купить что-то" />
 
@@ -42,6 +70,6 @@
         android:src="@drawable/info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription,ImageContrastCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
