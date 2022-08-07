@@ -1,6 +1,8 @@
 package ru.yandexschool.todolist.data
 
 import android.util.Log
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
 import java.util.*
@@ -97,7 +99,7 @@ class ToDoItemRepository {
                 deadline = Date(),
 
 
-            )
+                )
         )
         toDoItemList.add(
             ToDoItem(
@@ -107,7 +109,7 @@ class ToDoItemRepository {
                 deadline = Date(),
 
 
-            )
+                )
         )
         toDoItemList.add(
             ToDoItem(
@@ -120,8 +122,10 @@ class ToDoItemRepository {
         )
     }
 
-    fun fetchToDoItem(): List<ToDoItem> {
-        return toDoItemList
+    fun fetchToDoItem(): Flow<List<ToDoItem>> {
+        return flow {
+            emit(toDoItemList)
+        }
     }
 
     fun addTodoItem(toDoItem: ToDoItem) {

@@ -23,15 +23,17 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val toDoItemEdit = args.toDoItem
-        val cal = Calendar.getInstance()
         editFlag = args.editFlag
         vm = (activity as MainActivity).vm
-
         initSpinner()
+        initToDo(toDoItemEdit)
+        initListeners(toDoItemEdit)
+        initCalendar()
+    }
 
-
+    private fun initCalendar() {
+        val cal = Calendar.getInstance()
         val dateSetListener =
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 cal.set(Calendar.YEAR, year)
@@ -41,7 +43,6 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
                 binding.tvDeadlineDate.text = sdf.format(cal.time)
             }
-
         binding.swDatePicker.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
                 context?.let { it ->
@@ -53,29 +54,16 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
                     ).show()
                 }
         }
+    }
 
-        if (toDoItemEdit != null) {
-            binding.etToDo.setText(args.toDoItem?.text ?: "")
-            when (toDoItemEdit.importance) {
-                Importance.LOW -> binding.spImportance.setSelection(0)
-                Importance.BASIC -> binding.spImportance.setSelection(1)
-                Importance.IMPORTANT -> binding.spImportance.setSelection(2)
-
-            }
-            binding.tvDeadlineDate.text = toDoItemEdit.deadline?.dateToString("dd-mm-yyyy")
-        }
-
-
+    private fun initListeners(toDoItemEdit: ToDoItem?) {
         binding.tvSave.setOnClickListener {
-
             saveToDoItem(createToDoItem(toDoItemEdit))
             findNavController().popBackStack()
         }
-
         binding.ivClose.setOnClickListener {
             findNavController().popBackStack()
         }
-
         binding.tvDelete.setOnClickListener {
             if (toDoItemEdit != null) {
                 vm.deleteToDoItem(toDoItemEdit)
@@ -84,6 +72,17 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         }
     }
 
+    private fun initToDo(toDoItemEdit: ToDoItem?) {
+        if (toDoItemEdit != null) {
+            binding.etToDo.setText(args.toDoItem?.text ?: "")
+            when (toDoItemEdit.importance) {
+                Importance.LOW -> binding.spImportance.setSelection(0)
+                Importance.BASIC -> binding.spImportance.setSelection(1)
+                Importance.IMPORTANT -> binding.spImportance.setSelection(2)
+            }
+            binding.tvDeadlineDate.text = toDoItemEdit.deadline?.dateToString("dd-mm-yyyy")
+        }
+    }
 
     private fun initSpinner() {
         context?.let {
@@ -106,7 +105,6 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
             vm.editToDoItem(createToDoItem(toDoItem))
         }
     }
-
 
     private fun createToDoItem(toDoItemEdit: ToDoItem?): ToDoItem {
         val text = binding.etToDo.text.toString()

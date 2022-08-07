@@ -1,26 +1,38 @@
 package ru.yandexschool.todolist.presentation.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.data.ToDoItemRepository
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
+import ru.yandexschool.todolist.presentation.utils.ToDoItemState
 import java.util.*
 
 class ItemListViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewModel() {
 
-    private val _toDoItemListLiveData: MutableLiveData<List<ToDoItem>> = MutableLiveData()
-    val toDoItemListLiveData: LiveData<List<ToDoItem>> = _toDoItemListLiveData
+    private val _toDoItemListFlow:MutableStateFlow<ToDoItemState<List<ToDoItem>>> = MutableStateFlow(ToDoItemState.Loading())
+    val toDoItemListFlow: StateFlow<ToDoItemState<List<ToDoItem>>>  = _toDoItemListFlow
 
 
     init {
-        _toDoItemListLiveData.postValue(toDoItemRepository.fetchToDoItem())
+        viewModelScope.launch {
+            _toDoItemListFlow.value = ToDoItemState.Loading()
+            delay(5000)
+            toDoItemRepository.fetchToDoItem()
+                .collect { toDoItemList ->
+                    _toDoItemListFlow.value = ToDoItemState.Success(toDoItemList)
+                }
+        }
     }
+
+
 
     fun addToDoItem(toDoItem: ToDoItem) {
         toDoItemRepository.addTodoItem(toDoItem)
-        _toDoItemListLiveData.postValue(toDoItemRepository.fetchToDoItem())
     }
 
     fun deleteToDoItem(toDoItem: ToDoItem) {
