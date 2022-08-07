@@ -2,7 +2,6 @@ package ru.yandexschool.todolist.presentation.ui
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -10,7 +9,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.R
-import ru.yandexschool.todolist.data.model.ListItem
 import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
 import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
 import ru.yandexschool.todolist.presentation.utils.ToDoItemState
@@ -18,7 +16,7 @@ import ru.yandexschool.todolist.presentation.utils.ToDoItemState
 class ToDoItemListFragment :
     BaseFragment<FragmentToDoItemListBinding>(FragmentToDoItemListBinding::inflate) {
 
-    private lateinit var vm: ItemListViewModel
+    private lateinit var vm: MainViewModel
     private var toDoAdapter = ToDoItemListAdapter()
 
 
@@ -51,7 +49,7 @@ class ToDoItemListFragment :
     }
 
     private fun showLoading() {
-        Toast.makeText(context, "Идет загрузка", Toast.LENGTH_SHORT ).show()
+
     }
 
     private fun initListeners() {

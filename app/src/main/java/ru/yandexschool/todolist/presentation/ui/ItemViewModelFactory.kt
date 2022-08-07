@@ -12,6 +12,6 @@ class ItemViewModelFactory(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ItemListViewModel(toDoItemRepository) as T
+        return MainViewModel(toDoItemRepository) as T
     }
 }

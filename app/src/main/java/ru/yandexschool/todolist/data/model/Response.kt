@@ -1,6 +1,7 @@
 package ru.yandexschool.todolist.data.model
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 data class ResponseToDo(
 
@@ -16,22 +17,19 @@ data class ResponseToDo(
 
 data class ListItem(
 
-	val id: String,
-	val text: String,
-	val importance: String? = null,
-	val color: String? = null,
-	val deadline: Long? = null,
-	val done: Boolean = false,
-
-	@field:SerializedName("created_at")
-
-	val createdAt: Long,
-	@field:SerializedName("changed_at")
-	val changedAt: Long? = null,
-
-	@field:SerializedName("last_updated_by")
-	val lastUpdatedBy: Long? = null,
+    val id: UUID?,
+    val text: String,
+    val importance: String? = null,
+    val color: String? = null,
+    val deadline: Long? = null,
+    val done: Boolean = false,
+    @field:SerializedName("created_at")
+    val createdAt: Long,
+    @field:SerializedName("changed_at")
+    val changedAt: Long,
+    @field:SerializedName("last_updated_by")
+    val lastUpdatedBy: String? = null,
 
 
 
-)
+    )

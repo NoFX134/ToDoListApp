@@ -10,6 +10,9 @@
     <string name="importance">Важность</string>
     <string name="Deadline">Сделать до</string>
     <string name="Delete">Удалить</string>
+    <string name="importance_low">low</string>
+    <string name="importance_basic">basic</string>
+    <string name="importance_important">important</string>
     <string-array name="importance_array">
         <item>Нет</item>
         <item>Низкий</item>

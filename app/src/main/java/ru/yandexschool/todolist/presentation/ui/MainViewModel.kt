@@ -2,7 +2,6 @@ package ru.yandexschool.todolist.presentation.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -12,16 +11,16 @@ import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.presentation.utils.ToDoItemState
 import java.util.*
 
-class ItemListViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewModel() {
+class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewModel() {
 
-    private val _toDoItemListFlow:MutableStateFlow<ToDoItemState<List<ToDoItem>>> = MutableStateFlow(ToDoItemState.Loading())
-    val toDoItemListFlow: StateFlow<ToDoItemState<List<ToDoItem>>>  = _toDoItemListFlow
+    private val _toDoItemListFlow: MutableStateFlow<ToDoItemState<List<ToDoItem>>> =
+        MutableStateFlow(ToDoItemState.Loading())
+    val toDoItemListFlow: StateFlow<ToDoItemState<List<ToDoItem>>> = _toDoItemListFlow
 
 
     init {
         viewModelScope.launch {
             _toDoItemListFlow.value = ToDoItemState.Loading()
-            delay(5000)
             toDoItemRepository.fetchToDoItem()
                 .collect { toDoItemList ->
                     _toDoItemListFlow.value = ToDoItemState.Success(toDoItemList)
@@ -30,30 +29,23 @@ class ItemListViewModel(private val toDoItemRepository: ToDoItemRepository) : Vi
     }
 
 
-
-    fun addToDoItem(toDoItem: ToDoItem) {
-        toDoItemRepository.addTodoItem(toDoItem)
+    fun addToDoItemApi(toDoItem: ToDoItem) {
+        viewModelScope.launch {
+            toDoItemRepository.addTodoItem(toDoItem)
+        }
     }
-
-//    fun deleteToDoItem(toDoItem: ToDoItem) {
-//        toDoItemRepository.deleteTodoItem(toDoItem)
-//    }
-
-//    fun editToDoItem(toDoItem: ToDoItem) {
-//        toDoItemRepository.editTodoItem(toDoItem)
-//
-//    }
 
     fun createToDoItem(
         editFlag: Boolean,
         text: String,
         importance: Int,
-        toDoItemId: String,
+        toDoItemId: UUID?,
         toDoItemCreatedAt: Date?
     ): ToDoItem {
+
         if (!editFlag) {
             return ToDoItem(
-                id = UUID.randomUUID().toString(),
+                id = UUID.randomUUID(),
                 text = text,
                 importance =
                 when (importance) {
@@ -63,7 +55,9 @@ class ItemListViewModel(private val toDoItemRepository: ToDoItemRepository) : Vi
                     else -> Importance.BASIC
                 },
                 createdAt = Date(),
+                changedAt = Date()
             )
+
         } else return ToDoItem(
             id = toDoItemId,
             text = text,
