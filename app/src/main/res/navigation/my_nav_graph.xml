@@ -22,8 +22,9 @@
             android:name="toDoItem"
             app:argType="ru.yandexschool.todolist.data.model.ToDoItem"
             app:nullable="true" />
-        <argument android:name="position"
-            app:argType="integer"
-            android:defaultValue="-1" />
+        <argument
+            android:name="editFlag"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 </navigation>
