@@ -58,7 +58,7 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
 
     private fun initListeners(toDoItemEdit: ToDoItem?) {
         binding.tvSave.setOnClickListener {
-            saveToDoItem(createToDoItem(toDoItemEdit))
+            //saveToDoItem(createToDoItem(toDoItemEdit))
             findNavController().popBackStack()
         }
         binding.ivClose.setOnClickListener {
@@ -66,7 +66,7 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         }
         binding.tvDelete.setOnClickListener {
             if (toDoItemEdit != null) {
-                vm.deleteToDoItem(toDoItemEdit)
+            //    vm.deleteToDoItem(toDoItemEdit)
             }
             findNavController().popBackStack()
         }
@@ -98,13 +98,13 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         }
     }
 
-    private fun saveToDoItem(toDoItem: ToDoItem) {
-        if (!editFlag) {
-            vm.addToDoItem(toDoItem)
-        } else {
-            vm.editToDoItem(createToDoItem(toDoItem))
-        }
-    }
+//    private fun saveToDoItem(toDoItem: ToDoItem) {
+//        if (!editFlag) {
+//            vm.addToDoItem(toDoItem)
+//        } else {
+//            vm.editToDoItem(createToDoItem(toDoItem))
+//        }
+//    }
 
     private fun createToDoItem(toDoItemEdit: ToDoItem?): ToDoItem {
         val text = binding.etToDo.text.toString()

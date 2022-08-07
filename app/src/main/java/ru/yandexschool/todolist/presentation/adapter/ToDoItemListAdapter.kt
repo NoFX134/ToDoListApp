@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.Importance
+import ru.yandexschool.todolist.data.model.ListItem
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.databinding.ToDoCellBinding
 
@@ -22,13 +23,13 @@ class ToDoItemListAdapter :
         onItemClickListener = listener
     }
 
-    inner class ToDoItemViewHolder(itemView: View) :
+    class ToDoItemViewHolder(itemView: View, ) :
         RecyclerView.ViewHolder(itemView) {
 
         private var binding: ToDoCellBinding = ToDoCellBinding.bind(itemView)
 
         @SuppressLint("SetTextI18n")
-        fun bind(toDoItem: ToDoItem) = with(binding) {
+        fun bind(toDoItem: ToDoItem, onItemClickListener: ((ToDoItem) -> Unit)? ) = with(binding) {
             itemView.setOnClickListener {
                 onItemClickListener?.let {
                     it(toDoItem)
@@ -102,18 +103,18 @@ class ToDoItemListAdapter :
     }
 
     override fun onBindViewHolder(holder: ToDoItemViewHolder, position: Int) {
-        getItem(position).let { holder.bind(it) }
+        getItem(position).let { holder.bind(it, onItemClickListener) }
     }
 }
 
 class DiffCallback : DiffUtil.ItemCallback<ToDoItem>() {
 
     override fun areItemsTheSame(oldItem: ToDoItem, newItem: ToDoItem): Boolean {
-        return oldItem == newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: ToDoItem, newItem: ToDoItem): Boolean {
-        return areItemsTheSame(oldItem, newItem)
+        return oldItem == newItem
     }
 
 

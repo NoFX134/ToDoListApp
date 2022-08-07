@@ -35,14 +35,14 @@ class ItemListViewModel(private val toDoItemRepository: ToDoItemRepository) : Vi
         toDoItemRepository.addTodoItem(toDoItem)
     }
 
-    fun deleteToDoItem(toDoItem: ToDoItem) {
-        toDoItemRepository.deleteTodoItem(toDoItem)
-    }
+//    fun deleteToDoItem(toDoItem: ToDoItem) {
+//        toDoItemRepository.deleteTodoItem(toDoItem)
+//    }
 
-    fun editToDoItem(toDoItem: ToDoItem) {
-        toDoItemRepository.editTodoItem(toDoItem)
-
-    }
+//    fun editToDoItem(toDoItem: ToDoItem) {
+//        toDoItemRepository.editTodoItem(toDoItem)
+//
+//    }
 
     fun createToDoItem(
         editFlag: Boolean,
