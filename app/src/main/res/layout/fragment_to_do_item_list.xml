@@ -47,19 +47,6 @@
         android:clipToPadding="false"
         android:elevation="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar"
-        app:layout_constraintVertical_bias="1.0"
-        tools:layout_editor_absoluteX="120dp" />
-
-    <ProgressBar
-        android:id="@+id/pb_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?attr/progressBarStyle"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/rv_to_do_recycler_view"
-        app:layout_constraintEnd_toEndOf="@+id/rv_to_do_recycler_view"
-        app:layout_constraintStart_toStartOf="@+id/rv_to_do_recycler_view"
         app:layout_constraintTop_toBottomOf="@+id/app_bar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

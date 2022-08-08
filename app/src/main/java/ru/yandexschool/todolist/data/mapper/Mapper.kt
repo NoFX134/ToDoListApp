@@ -5,12 +5,14 @@ import android.content.Context
 import android.provider.Settings
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.*
+import ru.yandexschool.todolist.presentation.utils.Resource
 import java.util.*
 
 class Mapper(private var context: Context) {
 
     @SuppressLint("HardwareIds")
     private val id = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+
     fun responseToDoToListItem(remote: ResponseToDo): MutableList<ToDoItem> {
         return remote.list.map { listItemToToDoItem(it) } as MutableList<ToDoItem>
     }
@@ -33,6 +35,17 @@ class Mapper(private var context: Context) {
             ),
             status = "ok"
         )
+    }
+
+    fun errorMapper(errorCode: Int?): String{
+       return when(errorCode){
+            -1 -> context.getString(R.string.Error_noInternet)
+            404 -> context.getString(R.string.error_404)
+            400 -> context.getString(R.string.error_400)
+            401 -> context.getString(R.string.Error_401)
+            500 -> context.getString(R.string.Error_500)
+           else -> context.getString(R.string.Unknown_error)
+       }
     }
 
     private fun listItemToToDoItem(list: ListItem): ToDoItem {

@@ -2,38 +2,59 @@ package ru.yandexschool.todolist.presentation.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.data.ToDoItemRepository
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
-import ru.yandexschool.todolist.presentation.utils.ToDoItemState
+import ru.yandexschool.todolist.presentation.utils.Resource
 import java.util.*
 
 class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewModel() {
 
-    private val _toDoItemListFlow: MutableStateFlow<ToDoItemState<List<ToDoItem>>> =
-        MutableStateFlow(ToDoItemState.Loading())
-    val toDoItemListFlow: StateFlow<ToDoItemState<List<ToDoItem>>> = _toDoItemListFlow
+    private val _toDoItemListFlow: MutableStateFlow<Resource<List<ToDoItem>>> =
+        MutableStateFlow(Resource.Loading())
+    val toDoItemListFlow: StateFlow<Resource<List<ToDoItem>>> = _toDoItemListFlow
 
 
     init {
-        viewModelScope.launch {
-            _toDoItemListFlow.value = ToDoItemState.Loading()
-            toDoItemRepository.fetchToDoItem()
-                .collect { toDoItemList ->
-                    _toDoItemListFlow.value = ToDoItemState.Success(toDoItemList)
-                }
-        }
+        fetchToDoItem()
     }
 
-
-    fun addToDoItemApi(toDoItem: ToDoItem) {
+    fun addToDoItemApi(toDoItem: ToDoItem): Int? {
+        var errorCode: Int? = 0
         viewModelScope.launch {
-            toDoItemRepository.addTodoItem(toDoItem)
+            errorCode = toDoItemRepository.addTodoItem(toDoItem)
+            delay(100)
         }
+        fetchToDoItem()
+        return errorCode
+
     }
+
+    fun deleteToDoItem(toDoItemId: UUID): Int? {
+        var errorCode: Int? = 0
+        viewModelScope.launch {
+            errorCode = toDoItemRepository.deleteTodoItem(toDoItemId)
+            delay(100)
+        }
+
+        fetchToDoItem()
+        return errorCode
+    }
+
+    fun refreshToDoItem(toDoItemId: UUID, toDoItem: ToDoItem): Int? {
+        var errorCode: Int? = 0
+        viewModelScope.launch {
+            errorCode = toDoItemRepository.refreshToDoItem(toDoItemId, toDoItem)
+            delay(100)
+        }
+        fetchToDoItem()
+        return errorCode
+    }
+
 
     fun createToDoItem(
         editFlag: Boolean,
@@ -71,6 +92,16 @@ class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewMo
             changedAt = Date(),
             createdAt = toDoItemCreatedAt
         )
+    }
+
+    fun fetchToDoItem() {
+        viewModelScope.launch {
+            _toDoItemListFlow.value = Resource.Loading()
+            toDoItemRepository.fetchToDoItem()
+                .collect { resource ->
+                    _toDoItemListFlow.value = resource
+                }
+        }
     }
 
 }

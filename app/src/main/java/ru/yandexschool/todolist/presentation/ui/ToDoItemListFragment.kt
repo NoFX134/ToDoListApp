@@ -1,17 +1,28 @@
 package ru.yandexschool.todolist.presentation.ui
 
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.R
+import ru.yandexschool.todolist.data.UpdateWorker
+import ru.yandexschool.todolist.data.mapper.Mapper
 import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
 import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
-import ru.yandexschool.todolist.presentation.utils.ToDoItemState
+import ru.yandexschool.todolist.presentation.utils.Resource
+import java.util.concurrent.TimeUnit
 
 class ToDoItemListFragment :
     BaseFragment<FragmentToDoItemListBinding>(FragmentToDoItemListBinding::inflate) {
@@ -23,25 +34,47 @@ class ToDoItemListFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vm = (activity as MainActivity).vm
+        val connectivityManager =
+            getSystemService(requireContext(), ConnectivityManager::class.java)
         initAdapter()
         init()
         initListeners()
+        startWorker()
+        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                vm.fetchToDoItem()
+            }
+        }
+        connectivityManager?.registerDefaultNetworkCallback(networkCallback)
+    }
+
+    private fun startWorker() {
+        val request = PeriodicWorkRequestBuilder<UpdateWorker>(15, TimeUnit.MINUTES).build()
+        activity?.let {
+            WorkManager.getInstance(it.applicationContext).enqueueUniquePeriodicWork(
+                "ToDoItemUpdateWork",
+                ExistingPeriodicWorkPolicy.KEEP,
+                request
+            )
+        }
     }
 
     private fun init() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vm.toDoItemListFlow.collect { toDoItemState ->
-                    when (toDoItemState) {
-                        is ToDoItemState.Success -> {
-                            toDoAdapter.submitList(toDoItemState.data)
-                        }
-                        is ToDoItemState.Error -> {
-                            showError(toDoItemState.message)
+                vm.toDoItemListFlow.collect { resource ->
+                    when (resource) {
+                        is Resource.Success -> {
+                            toDoAdapter.submitList(resource.data)
                         }
 
-                        is ToDoItemState.Loading ->showLoading()
+                        is Resource.Error -> {
+                            showError(resource.message)
+                        }
+
+                        is Resource.Loading -> showLoading()
                     }
                 }
             }
@@ -85,7 +118,27 @@ class ToDoItemListFragment :
         }
     }
 
-    private fun showError(message: String?) {
-
+    private fun showError(message: Int?) {
+        when (message) {
+            -1, 404, 500 -> {
+                Snackbar.make(
+                    requireView(),
+                    Mapper(requireContext()).errorMapper(message),
+                    Snackbar.LENGTH_INDEFINITE
+                ).apply {
+                    setAction(getString(R.string.refresh)) {
+                        vm.fetchToDoItem()
+                    }
+                }.show()
+            }
+            else -> Snackbar.make(
+                requireView(),
+                Mapper(requireContext()).errorMapper(message),
+                Snackbar.LENGTH_INDEFINITE
+            ).show()
+        }
     }
 }
+
+
+

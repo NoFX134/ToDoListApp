@@ -6,7 +6,9 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.snackbar.Snackbar
 import ru.yandexschool.todolist.R
+import ru.yandexschool.todolist.data.mapper.Mapper
 import ru.yandexschool.todolist.data.model.*
 import ru.yandexschool.todolist.databinding.FragmentToDoAddBinding
 import ru.yandexschool.todolist.presentation.utils.dateToString
@@ -38,8 +40,8 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                val myFormat = "dd-mm-yyyy"
-                val sdf = SimpleDateFormat(myFormat, Locale.US)
+                val myFormat = "dd-MM-yyyy"
+                val sdf = SimpleDateFormat(myFormat, Locale("ru"))
                 binding.tvDeadlineDate.text = sdf.format(cal.time)
             }
         binding.swDatePicker.setOnCheckedChangeListener { _, isChecked ->
@@ -65,7 +67,7 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         }
         binding.tvDelete.setOnClickListener {
             if (toDoItemEdit != null) {
-//    vm.deleteToDoItem(toDoItemEdit)
+                toDoItemEdit.id?.let { id -> vm.deleteToDoItem(id) }
             }
             findNavController().popBackStack()
         }
@@ -79,31 +81,32 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
                 Importance.BASIC -> binding.spImportance.setSelection(1)
                 Importance.IMPORTANT -> binding.spImportance.setSelection(2)
             }
-            binding.tvDeadlineDate.text = toDoItemEdit.deadline?.dateToString("dd-mm-yyyy")
+            binding.tvDeadlineDate.text = toDoItemEdit.deadline?.dateToString("dd-MM-yyyy")
         }
     }
 
     private fun initSpinner() {
-        context?.let {
-            ArrayAdapter.createFromResource(
-                it,
-                R.array.importance_array,
-                android.R.layout.simple_spinner_item
-            ).also { adapter ->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                binding.spImportance.adapter = adapter
-                binding.spImportance.setSelection(1)
-            }
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.importance_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spImportance.adapter = adapter
+            binding.spImportance.setSelection(1)
         }
     }
 
     private fun saveToDoItem(toDoItem: ToDoItem) {
+
         if (!editFlag) {
-            vm.addToDoItemApi(toDoItem)
+             vm.addToDoItemApi(toDoItem)
         } else {
-            //vm.editToDoItem(createToDoItem(toDoItem))
+         toDoItem.id?.let { vm.refreshToDoItem(it, createToDoItem(toDoItem)) }
         }
+
     }
+
 
     private fun createToDoItem(toDoItemEdit: ToDoItem?): ToDoItem {
         val text = binding.etToDo.text.toString()
