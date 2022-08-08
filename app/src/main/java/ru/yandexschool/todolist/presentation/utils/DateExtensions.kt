@@ -5,7 +5,7 @@ import java.util.*
 
 fun Date.dateToString(format: String): String {
 
-    val dateFormatter = SimpleDateFormat(format, Locale.getDefault())
+    val dateFormatter = SimpleDateFormat(format, Locale("ru"))
     return dateFormatter.format(this)
 
 }

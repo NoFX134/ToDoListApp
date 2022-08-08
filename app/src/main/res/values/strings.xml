@@ -4,12 +4,22 @@
     <string name="appName">Мои дела</string>
     <string name="done">Выполнено - 5</string>
     <string name="add_to_do">add_to_do</string>
-    <string name="close">close</string>
+    <string name="close">Закрыть</string>
     <string name="Save">СОХРАНИТЬ</string>
     <string name="buy_something">Купить что-то</string>
     <string name="importance">Важность</string>
     <string name="Deadline">Сделать до</string>
     <string name="Delete">Удалить</string>
+    <string name="importance_low">low</string>
+    <string name="importance_basic">basic</string>
+    <string name="importance_important">important</string>
+    <string name="Error_noInternet">Нет интернет соединения</string>
+    <string name="error_404">Страница не найдена</string>
+    <string name="error_400">Неправильный запрос</string>
+    <string name="Error_401">Проблема с авторизацией</string>
+    <string name="Error_500">Ошибка сервера</string>
+    <string name="Unknown_error">Неизвестная ошибка</string>
+    <string name="refresh">Обновить</string>
     <string-array name="importance_array">
         <item>Нет</item>
         <item>Низкий</item>

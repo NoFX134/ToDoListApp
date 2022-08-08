@@ -1,161 +1,82 @@
 package ru.yandexschool.todolist.data
 
-import android.util.Log
+import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.yandexschool.todolist.data.model.Importance
+import ru.yandexschool.todolist.data.mapper.Mapper
 import ru.yandexschool.todolist.data.model.ToDoItem
+import ru.yandexschool.todolist.data.remote.RetrofitInstance
+import ru.yandexschool.todolist.presentation.utils.Resource
 import java.util.*
 
-class ToDoItemRepository {
+class ToDoItemRepository(context: Context, private val sharedPref: SharedPref) {
 
-    private val toDoItemList: MutableList<ToDoItem> = mutableListOf()
-
-    init {
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Длинный текст, длинный текст, длинный текст, длинный текст," +
-                        " длинный текст, длинный текст, длинный текст, длинный текст, длинный текст",
-                importance = Importance.LOW,
-            )
-        )
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Длинный текст, длинный текст, длинный текст, длинный текст," +
-                        " длинный текст, длинный текст, длинный текст, длинный текст, длинный текст",
-                importance = Importance.BASIC,
-                done = true
-            )
-        )
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Купить продукты",
-                importance = Importance.IMPORTANT,
-            )
-        )
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Помыть машину",
-                importance = Importance.BASIC,
-                done = true
-            )
-        )
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Сделать домашнее задание до дедлайна",
-                importance = Importance.BASIC,
-            )
-        )
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Сходить в магазин",
-                done = true,
-                importance = Importance.BASIC,
-            )
-        )
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Полить цветы",
-                importance = Importance.BASIC,
-            )
-        )
-
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Покормить кошку",
-                importance = Importance.LOW,
-
-                )
-        )
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Исправить ошибки",
-                importance = Importance.LOW,
-                done = true
-            )
-        )
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Что-то нужно сделать",
-                importance = Importance.IMPORTANT,
-                done = true
-            )
-        )
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Важное дело с деадлайном",
-                importance = Importance.IMPORTANT,
-                deadline = Date(),
+    private val mapper = Mapper(context)
 
 
-                )
-        )
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Простое дело с деадлайном",
-                importance = Importance.BASIC,
-                deadline = Date(),
-
-
-                )
-        )
-        toDoItemList.add(
-            ToDoItem(
-                id = UUID.randomUUID().toString(),
-                text = "Выполненое дело с деадлайном",
-                importance = Importance.BASIC,
-                deadline = Date(),
-                done = true
-            )
-        )
-    }
-
-    fun fetchToDoItem(): Flow<List<ToDoItem>> {
+    fun fetchToDoItem(): Flow<Resource<List<ToDoItem>>> {
         return flow {
-            emit(toDoItemList)
-        }
-    }
-
-    fun addTodoItem(toDoItem: ToDoItem) {
-        toDoItemList.add(0, toDoItem)
-    }
-
-    fun editTodoItem(toDoItem: ToDoItem) {
-        toDoItemList.replaceAll {
-
-            when {
-                (it.id == toDoItem.id) -> ToDoItem(
-                    it.id,
-                    toDoItem.text,
-                    toDoItem.importance,
-                    toDoItem.deadline,
-                    toDoItem.done,
-                    it.createdAt,
-                    toDoItem.createdAt
-                )
-
-                else -> {
-                    it
-                }
+            try {
+                val response = RetrofitInstance(sharedPref).api.fetchToDoItemList()
+                if (response.isSuccessful) {
+                    response.body()?.let { resultResponse ->
+                        sharedPref.save(resultResponse.revision.toString())
+                        emit(Resource.Success(mapper.responseToDoToListItem(resultResponse)))
+                    }
+                } else emit(Resource.Error(response.code()))
+            } catch (e: Exception) {
+                emit(Resource.Error(-1))
             }
+
         }
     }
 
-    fun deleteTodoItem(toDoItem: ToDoItem) {
-        toDoItemList.remove(toDoItem)
+    suspend fun addTodoItem(toDoItem: ToDoItem) {
+        try {
+            val response =
+                RetrofitInstance(sharedPref).api.addToDoItem(mapper.toDoItemToPostToDo(toDoItem))
+            if (response.isSuccessful) {
+                sharedPref.save(response.body()?.revision.toString())
+            } else {
+                response.code()
+            }
+        } catch (e: Exception) {
+        }
     }
 
 
+    suspend fun deleteTodoItem(toDoItemId: UUID) {
+        try {
+            val response = RetrofitInstance(sharedPref).api.deleteToDoItem(toDoItemId.toString())
+            if (response.isSuccessful) {
+                sharedPref.save(response.body()?.revision.toString())
+            } else {
+                response.code()
+            }
+        } catch (e: Exception) {
+        }
+    }
+
+    suspend fun refreshToDoItem(toDoItemId: UUID, toDoItem: ToDoItem) {
+        try {
+            val response = RetrofitInstance(sharedPref).api.refreshToDoItem(
+                toDoItemId.toString(),
+                mapper.toDoItemToPostToDo(toDoItem)
+            )
+            if (response.isSuccessful) {
+                sharedPref.save(response.body()?.revision.toString())
+            } else {
+                response.code()
+            }
+        } catch (e: Exception) {
+        }
+    }
 }
+
+
+
+
+
+
+
+

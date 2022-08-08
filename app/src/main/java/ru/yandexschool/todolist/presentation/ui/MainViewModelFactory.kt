@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModelProvider
 import ru.yandexschool.todolist.data.ToDoItemRepository
 
 @Suppress("UNCHECKED_CAST")
-class ItemViewModelFactory(
+class MainViewModelFactory(
     private val toDoItemRepository: ToDoItemRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ItemListViewModel(toDoItemRepository) as T
+        return MainViewModel(toDoItemRepository) as T
     }
 }
