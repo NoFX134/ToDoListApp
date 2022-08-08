@@ -1,9 +1,6 @@
 package ru.yandexschool.todolist.data
 
 import android.content.Context
-import android.util.Log
-import androidx.work.Worker
-import androidx.work.WorkerParameters
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.yandexschool.todolist.data.mapper.Mapper
@@ -20,7 +17,6 @@ class ToDoItemRepository(context: Context, private val sharedPref: SharedPref) {
     fun fetchToDoItem(): Flow<Resource<List<ToDoItem>>> {
         return flow {
             try {
-                Log.d("REPO", "Вызов")
                 val response = RetrofitInstance(sharedPref).api.fetchToDoItemList()
                 if (response.isSuccessful) {
                     response.body()?.let { resultResponse ->
@@ -35,50 +31,44 @@ class ToDoItemRepository(context: Context, private val sharedPref: SharedPref) {
         }
     }
 
-    suspend fun addTodoItem(toDoItem: ToDoItem): Int? {
-        return try {
+    suspend fun addTodoItem(toDoItem: ToDoItem) {
+        try {
             val response =
                 RetrofitInstance(sharedPref).api.addToDoItem(mapper.toDoItemToPostToDo(toDoItem))
             if (response.isSuccessful) {
                 sharedPref.save(response.body()?.revision.toString())
-                return 0
             } else {
                 response.code()
             }
         } catch (e: Exception) {
-            -1
         }
     }
 
 
-    suspend fun deleteTodoItem(toDoItemId: UUID): Int? {
-        return try {
+    suspend fun deleteTodoItem(toDoItemId: UUID) {
+        try {
             val response = RetrofitInstance(sharedPref).api.deleteToDoItem(toDoItemId.toString())
             if (response.isSuccessful) {
                 sharedPref.save(response.body()?.revision.toString())
-                return 0
             } else {
                 response.code()
             }
         } catch (e: Exception) {
-            -1
         }
     }
 
-    suspend fun refreshToDoItem(toDoItemId: UUID, toDoItem: ToDoItem): Int? {
-        return try {
+    suspend fun refreshToDoItem(toDoItemId: UUID, toDoItem: ToDoItem) {
+        try {
             val response = RetrofitInstance(sharedPref).api.refreshToDoItem(
                 toDoItemId.toString(),
                 mapper.toDoItemToPostToDo(toDoItem)
             )
             if (response.isSuccessful) {
                 sharedPref.save(response.body()?.revision.toString())
-                return 0
             } else {
                 response.code()
             }
         } catch (e: Exception) {
-            -1
         }
     }
 }

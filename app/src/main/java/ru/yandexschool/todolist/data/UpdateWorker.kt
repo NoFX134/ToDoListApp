@@ -13,7 +13,6 @@ class UpdateWorker(private val context: Context, params: WorkerParameters) :
             context, SharedPref(context)
         )
         try {
-            Log.e("Worker", "WORK")
             repository.fetchToDoItem()
             return Result.success()
         } catch (e: Exception) {

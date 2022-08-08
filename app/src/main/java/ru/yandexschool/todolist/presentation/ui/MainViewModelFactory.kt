@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import ru.yandexschool.todolist.data.ToDoItemRepository
 
 @Suppress("UNCHECKED_CAST")
-class ItemViewModelFactory(
+class MainViewModelFactory(
     private val toDoItemRepository: ToDoItemRepository
 ) : ViewModelProvider.Factory {
 

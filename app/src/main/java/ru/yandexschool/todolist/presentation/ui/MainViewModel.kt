@@ -23,36 +23,28 @@ class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewMo
         fetchToDoItem()
     }
 
-    fun addToDoItemApi(toDoItem: ToDoItem): Int? {
-        var errorCode: Int? = 0
+    fun addToDoItemApi(toDoItem: ToDoItem) {
         viewModelScope.launch {
-            errorCode = toDoItemRepository.addTodoItem(toDoItem)
-            delay(100)
+            toDoItemRepository.addTodoItem(toDoItem)
+
         }
         fetchToDoItem()
-        return errorCode
-
     }
 
-    fun deleteToDoItem(toDoItemId: UUID): Int? {
-        var errorCode: Int? = 0
+    fun deleteToDoItem(toDoItemId: UUID) {
         viewModelScope.launch {
-            errorCode = toDoItemRepository.deleteTodoItem(toDoItemId)
-            delay(100)
-        }
+            toDoItemRepository.deleteTodoItem(toDoItemId)
 
+        }
         fetchToDoItem()
-        return errorCode
     }
 
-    fun refreshToDoItem(toDoItemId: UUID, toDoItem: ToDoItem): Int? {
-        var errorCode: Int? = 0
+    fun refreshToDoItem(toDoItemId: UUID, toDoItem: ToDoItem) {
         viewModelScope.launch {
-            errorCode = toDoItemRepository.refreshToDoItem(toDoItemId, toDoItem)
-            delay(100)
+            toDoItemRepository.refreshToDoItem(toDoItemId, toDoItem)
+
         }
         fetchToDoItem()
-        return errorCode
     }
 
 
@@ -96,6 +88,7 @@ class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewMo
 
     fun fetchToDoItem() {
         viewModelScope.launch {
+            delay(1000)
             _toDoItemListFlow.value = Resource.Loading()
             toDoItemRepository.fetchToDoItem()
                 .collect { resource ->
