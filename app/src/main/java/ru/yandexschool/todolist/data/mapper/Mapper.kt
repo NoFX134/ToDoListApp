@@ -3,6 +3,7 @@ package ru.yandexschool.todolist.data.mapper
 import android.annotation.SuppressLint
 import android.content.Context
 import android.provider.Settings
+import android.util.Log
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.*
 import ru.yandexschool.todolist.presentation.utils.Resource
@@ -18,6 +19,7 @@ class Mapper(private var context: Context) {
     }
 
     fun toDoItemToPostToDo(toDoItem: ToDoItem): PostToDo {
+
         return PostToDo(
             element = ListItem(
                 id = toDoItem.id,
@@ -35,6 +37,7 @@ class Mapper(private var context: Context) {
             ),
             status = "ok"
         )
+
     }
 
     fun errorMapper(errorCode: Int?): String{

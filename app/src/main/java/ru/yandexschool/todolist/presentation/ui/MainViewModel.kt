@@ -10,6 +10,7 @@ import ru.yandexschool.todolist.data.ToDoItemRepository
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.presentation.utils.Resource
+import ru.yandexschool.todolist.presentation.utils.stringToDate
 import java.util.*
 
 class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewModel() {
@@ -42,7 +43,6 @@ class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewMo
     fun refreshToDoItem(toDoItemId: UUID, toDoItem: ToDoItem) {
         viewModelScope.launch {
             toDoItemRepository.refreshToDoItem(toDoItemId, toDoItem)
-
         }
         fetchToDoItem()
     }
@@ -53,25 +53,23 @@ class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewMo
         text: String,
         importance: Int,
         toDoItemId: UUID?,
-        toDoItemCreatedAt: Date?
+        toDoItemCreatedAt: Date?,
+        toDoItemDeadline: String
     ): ToDoItem {
-
-        if (!editFlag) {
-            return ToDoItem(
-                id = UUID.randomUUID(),
-                text = text,
-                importance =
-                when (importance) {
-                    0 -> Importance.LOW
-                    1 -> Importance.BASIC
-                    2 -> Importance.IMPORTANT
-                    else -> Importance.BASIC
-                },
-                createdAt = Date(),
-                changedAt = Date()
-            )
-
-        } else return ToDoItem(
+        if (!editFlag) return ToDoItem(
+            id = UUID.randomUUID(),
+            text = text,
+            importance =
+            when (importance) {
+                0 -> Importance.LOW
+                1 -> Importance.BASIC
+                2 -> Importance.IMPORTANT
+                else -> Importance.BASIC
+            },
+            deadline= toDoItemDeadline.stringToDate("dd-MM-yyyy"),
+            createdAt = Date(),
+            changedAt = Date()
+        ) else return ToDoItem(
             id = toDoItemId,
             text = text,
             importance =
@@ -81,6 +79,7 @@ class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewMo
                 2 -> Importance.IMPORTANT
                 else -> Importance.BASIC
             },
+            deadline= toDoItemDeadline.stringToDate("dd-MM-yyyy"),
             changedAt = Date(),
             createdAt = toDoItemCreatedAt
         )
@@ -96,5 +95,4 @@ class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewMo
                 }
         }
     }
-
 }

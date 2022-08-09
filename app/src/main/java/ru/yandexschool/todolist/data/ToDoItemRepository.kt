@@ -9,7 +9,7 @@ import ru.yandexschool.todolist.data.remote.RetrofitInstance
 import ru.yandexschool.todolist.presentation.utils.Resource
 import java.util.*
 
-class ToDoItemRepository(context: Context, private val sharedPref: SharedPref) {
+class ToDoItemRepository( context: Context, private val sharedPref: SharedPref) {
 
     private val mapper = Mapper(context)
 
@@ -27,7 +27,6 @@ class ToDoItemRepository(context: Context, private val sharedPref: SharedPref) {
             } catch (e: Exception) {
                 emit(Resource.Error(-1))
             }
-
         }
     }
 

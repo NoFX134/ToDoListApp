@@ -50,14 +50,7 @@ class ToDoItemListFragment :
     }
 
     private fun startWorker() {
-        val request = PeriodicWorkRequestBuilder<UpdateWorker>(15, TimeUnit.MINUTES).build()
-        activity?.let {
-            WorkManager.getInstance(it.applicationContext).enqueueUniquePeriodicWork(
-                "ToDoItemUpdateWork",
-                ExistingPeriodicWorkPolicy.KEEP,
-                request
-            )
-        }
+
     }
 
     private fun init() {
@@ -131,6 +124,7 @@ class ToDoItemListFragment :
                     }
                 }.show()
             }
+
             else -> Snackbar.make(
                 requireView(),
                 Mapper(requireContext()).errorMapper(message),

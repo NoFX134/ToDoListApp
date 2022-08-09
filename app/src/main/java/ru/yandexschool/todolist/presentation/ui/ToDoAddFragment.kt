@@ -2,13 +2,12 @@ package ru.yandexschool.todolist.presentation.ui
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.snackbar.Snackbar
 import ru.yandexschool.todolist.R
-import ru.yandexschool.todolist.data.mapper.Mapper
 import ru.yandexschool.todolist.data.model.*
 import ru.yandexschool.todolist.databinding.FragmentToDoAddBinding
 import ru.yandexschool.todolist.presentation.utils.dateToString
@@ -40,9 +39,7 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                val myFormat = "dd-MM-yyyy"
-                val sdf = SimpleDateFormat(myFormat, Locale("ru"))
-                binding.tvDeadlineDate.text = sdf.format(cal.time)
+                binding.tvDeadlineDate.text = cal.time.dateToString("dd-MM-yyyy")
             }
         binding.swDatePicker.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
@@ -98,7 +95,6 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
     }
 
     private fun saveToDoItem(toDoItem: ToDoItem) {
-
         if (!editFlag) {
              vm.addToDoItemApi(toDoItem)
         } else {
@@ -113,7 +109,8 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         val importance = binding.spImportance.selectedItemPosition
         val toDoItemId = toDoItemEdit?.id
         val toDoItemCreatedAt = toDoItemEdit?.createdAt
-        return vm.createToDoItem(editFlag, text, importance, toDoItemId, toDoItemCreatedAt)
+        val toDoItemDeadline = binding.tvDeadlineDate.text.toString()
+        return vm.createToDoItem(editFlag, text, importance, toDoItemId, toDoItemCreatedAt, toDoItemDeadline)
     }
 }
 
