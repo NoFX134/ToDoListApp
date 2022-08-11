@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import ru.yandexschool.todolist.data.UpdateWorker
+import ru.yandexschool.todolist.workers.UpdateWorker
 import java.util.concurrent.TimeUnit
 
 class App : Application() {

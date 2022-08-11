@@ -4,19 +4,15 @@ import com.google.gson.annotations.SerializedName
 import java.util.*
 
 data class ResponseToDo(
-
-	@field:SerializedName("list")
-	val list: List<ListItem>,
-
-	@field:SerializedName("status")
-	val status: String? = null,
-
-	@field:SerializedName("revision")
-	val revision: Int? = null
+    @field:SerializedName("list")
+    val list: List<ListItem>,
+    @field:SerializedName("status")
+    val status: String? = null,
+    @field:SerializedName("revision")
+    val revision: Int? = null
 )
 
 data class ListItem(
-
     val id: UUID?,
     val text: String,
     val importance: String? = null,
@@ -29,7 +25,4 @@ data class ListItem(
     val changedAt: Long,
     @field:SerializedName("last_updated_by")
     val lastUpdatedBy: String? = null,
-
-
-
-    )
+)

@@ -1,6 +1,4 @@
-
-
-package ru.yandexschool.todolist.presentation.ui
+package ru.yandexschool.todolist.presentation.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

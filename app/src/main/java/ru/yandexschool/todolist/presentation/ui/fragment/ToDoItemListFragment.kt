@@ -1,4 +1,4 @@
-package ru.yandexschool.todolist.presentation.ui
+package ru.yandexschool.todolist.presentation.ui.fragment
 
 import android.net.ConnectivityManager
 import android.net.Network
@@ -13,42 +13,49 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.R
-import ru.yandexschool.todolist.data.mapper.Mapper
+import ru.yandexschool.todolist.data.mapper.ModelMapper
 import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
 import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
-import ru.yandexschool.todolist.presentation.utils.Resource
+import ru.yandexschool.todolist.presentation.ui.MainActivity
+import ru.yandexschool.todolist.presentation.ui.viewModels.MainViewModel
+import ru.yandexschool.todolist.utils.Resource
 
 class ToDoItemListFragment :
     BaseFragment<FragmentToDoItemListBinding>(FragmentToDoItemListBinding::inflate) {
 
     private lateinit var vm: MainViewModel
     private var toDoAdapter = ToDoItemListAdapter()
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        vm = (activity as MainActivity).vm
-        val connectivityManager =
-            getSystemService(requireContext(), ConnectivityManager::class.java)
-        initAdapter()
-        init()
-        initListeners()
-        startWorker()
-        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+    private val connectivityManager by lazy {
+        getSystemService(
+            requireContext(),
+            ConnectivityManager::class.java
+        )
+    }
+    private val networkCallback by lazy {
+        object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
                 vm.fetchToDoItem()
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        super.onViewCreated(view, savedInstanceState)
+        vm = (activity as MainActivity).vm
+        initAdapter()
+        init()
+        initListeners()
         connectivityManager?.registerDefaultNetworkCallback(networkCallback)
     }
 
-    private fun startWorker() {
-
+    override fun onPause() {
+        super.onPause()
+        connectivityManager?.unregisterNetworkCallback(networkCallback)
     }
 
     private fun init() {
-
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.toDoItemListFlow.collect { resource ->
@@ -56,11 +63,9 @@ class ToDoItemListFragment :
                         is Resource.Success -> {
                             toDoAdapter.submitList(resource.data)
                         }
-
                         is Resource.Error -> {
                             showError(resource.message)
                         }
-
                         is Resource.Loading -> showLoading()
                     }
                 }
@@ -111,7 +116,7 @@ class ToDoItemListFragment :
             -1, 404, 500 -> {
                 Snackbar.make(
                     requireView(),
-                    Mapper(requireContext()).errorMapper(message),
+                    ModelMapper(requireContext()).errorMapper(message),
                     Snackbar.LENGTH_INDEFINITE
                 ).apply {
                     setAction(getString(R.string.refresh)) {
@@ -122,12 +127,9 @@ class ToDoItemListFragment :
 
             else -> Snackbar.make(
                 requireView(),
-                Mapper(requireContext()).errorMapper(message),
+                ModelMapper(requireContext()).errorMapper(message),
                 Snackbar.LENGTH_INDEFINITE
             ).show()
         }
     }
 }
-
-
-

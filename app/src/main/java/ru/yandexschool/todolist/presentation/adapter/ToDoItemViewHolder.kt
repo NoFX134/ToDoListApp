@@ -8,7 +8,7 @@ import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.databinding.ToDoCellBinding
-import ru.yandexschool.todolist.presentation.utils.dateToString
+import ru.yandexschool.todolist.utils.dateToString
 import java.util.*
 
 class ToDoItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -59,7 +59,6 @@ class ToDoItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                     tvToDoText.text = toDoItem.text
                     cbCheck.visibility = View.VISIBLE
                     cbCheckRed.visibility = View.GONE
-
                 }
             }
         }

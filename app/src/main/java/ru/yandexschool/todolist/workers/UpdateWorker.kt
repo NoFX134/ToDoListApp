@@ -1,23 +1,19 @@
-package ru.yandexschool.todolist.data
+package ru.yandexschool.todolist.workers
 
 import android.content.Context
-import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import ru.yandexschool.todolist.data.ToDoItemRepository
 
-class UpdateWorker(private val context: Context, params: WorkerParameters) :
+class UpdateWorker(context: Context, params: WorkerParameters, private var repository: ToDoItemRepository) :
     Worker(context, params) {
 
     override fun doWork(): Result {
-        val repository = ToDoItemRepository(
-            context, SharedPref(context)
-        )
         try {
             repository.fetchToDoItem()
             return Result.success()
         } catch (e: Exception) {
             return Result.failure()
         }
-
     }
 }

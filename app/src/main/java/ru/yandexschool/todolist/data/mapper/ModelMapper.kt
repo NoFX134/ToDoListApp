@@ -3,13 +3,11 @@ package ru.yandexschool.todolist.data.mapper
 import android.annotation.SuppressLint
 import android.content.Context
 import android.provider.Settings
-import android.util.Log
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.*
-import ru.yandexschool.todolist.presentation.utils.Resource
 import java.util.*
 
-class Mapper(private var context: Context) {
+class ModelMapper(private var context: Context) {
 
     @SuppressLint("HardwareIds")
     private val id = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)

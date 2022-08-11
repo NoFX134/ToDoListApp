@@ -1,8 +1,7 @@
-package ru.yandexschool.todolist.presentation.ui
+package ru.yandexschool.todolist.presentation.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,8 +9,8 @@ import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.data.ToDoItemRepository
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
-import ru.yandexschool.todolist.presentation.utils.Resource
-import ru.yandexschool.todolist.presentation.utils.stringToDate
+import ru.yandexschool.todolist.utils.Resource
+import ru.yandexschool.todolist.utils.stringToDate
 import java.util.*
 
 class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewModel() {

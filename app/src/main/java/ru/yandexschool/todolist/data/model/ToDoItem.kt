@@ -14,8 +14,6 @@ data class ToDoItem(
     val changedAt: Date
 ): Serializable
 
-
-
 enum class Importance {
     LOW,
     BASIC,

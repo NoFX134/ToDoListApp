@@ -1,4 +1,4 @@
-package ru.yandexschool.todolist.presentation.ui
+package ru.yandexschool.todolist.presentation.ui.fragment
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -10,7 +10,9 @@ import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.databinding.FragmentToDoAddBinding
-import ru.yandexschool.todolist.presentation.utils.dateToString
+import ru.yandexschool.todolist.presentation.ui.MainActivity
+import ru.yandexschool.todolist.presentation.ui.viewModels.MainViewModel
+import ru.yandexschool.todolist.utils.dateToString
 import java.util.*
 
 class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBinding::inflate) {
@@ -18,7 +20,6 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
     private lateinit var vm: MainViewModel
     private val args: ToDoAddFragmentArgs by navArgs()
     private var editFlag = false
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -106,7 +107,6 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
 
     }
 
-
     private fun createToDoItem(toDoItemEdit: ToDoItem?): ToDoItem {
         val text = binding.etToDo.text.toString()
         val importance = binding.spImportance.selectedItemPosition
@@ -123,4 +123,3 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         )
     }
 }
-

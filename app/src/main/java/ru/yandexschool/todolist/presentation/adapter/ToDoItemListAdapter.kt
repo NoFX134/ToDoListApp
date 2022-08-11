@@ -6,8 +6,6 @@ import androidx.recyclerview.widget.ListAdapter
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.ToDoItem
 
-
-
 class ToDoItemListAdapter :
     ListAdapter<ToDoItem, ToDoItemViewHolder>(DiffCallback()) {
 

@@ -1,4 +1,4 @@
-package ru.yandexschool.todolist.presentation.ui
+package ru.yandexschool.todolist.presentation.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

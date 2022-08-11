@@ -1,4 +1,4 @@
-package ru.yandexschool.todolist.presentation.utils
+package ru.yandexschool.todolist.utils
 
 sealed class Resource<T>(
     val data: T? = null,
