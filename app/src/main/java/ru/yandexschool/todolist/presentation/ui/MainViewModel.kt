@@ -2,6 +2,7 @@ package ru.yandexschool.todolist.presentation.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +19,6 @@ class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewMo
     private val _toDoItemListFlow: MutableStateFlow<Resource<List<ToDoItem>>> =
         MutableStateFlow(Resource.Loading())
     val toDoItemListFlow: StateFlow<Resource<List<ToDoItem>>> = _toDoItemListFlow
-
 
     init {
         fetchToDoItem()

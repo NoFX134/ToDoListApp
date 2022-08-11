@@ -2,16 +2,15 @@ package ru.yandexschool.todolist.presentation.ui
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import ru.yandexschool.todolist.R
-import ru.yandexschool.todolist.data.model.*
+import ru.yandexschool.todolist.data.model.Importance
+import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.databinding.FragmentToDoAddBinding
 import ru.yandexschool.todolist.presentation.utils.dateToString
-import java.text.SimpleDateFormat
 import java.util.*
 
 class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBinding::inflate) {
@@ -42,7 +41,7 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
                 binding.tvDeadlineDate.text = cal.time.dateToString("dd-MM-yyyy")
             }
         binding.swDatePicker.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
+            if (isChecked) {
                 context?.let { it ->
                     DatePickerDialog(
                         it, dateSetListener,
@@ -51,6 +50,9 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
                         cal.get(Calendar.DAY_OF_MONTH)
                     ).show()
                 }
+            } else {
+                binding.tvDeadlineDate.text = ""
+            }
         }
     }
 
@@ -72,6 +74,7 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
 
     private fun initToDo(toDoItemEdit: ToDoItem?) {
         if (toDoItemEdit != null) {
+            if (toDoItemEdit.deadline != null) binding.swDatePicker.isChecked = true
             binding.etToDo.setText(args.toDoItem?.text ?: "")
             when (toDoItemEdit.importance) {
                 Importance.LOW -> binding.spImportance.setSelection(0)
@@ -96,9 +99,9 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
 
     private fun saveToDoItem(toDoItem: ToDoItem) {
         if (!editFlag) {
-             vm.addToDoItemApi(toDoItem)
+            vm.addToDoItemApi(toDoItem)
         } else {
-         toDoItem.id?.let { vm.refreshToDoItem(it, createToDoItem(toDoItem)) }
+            toDoItem.id?.let { vm.refreshToDoItem(it, createToDoItem(toDoItem)) }
         }
 
     }
@@ -110,7 +113,14 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         val toDoItemId = toDoItemEdit?.id
         val toDoItemCreatedAt = toDoItemEdit?.createdAt
         val toDoItemDeadline = binding.tvDeadlineDate.text.toString()
-        return vm.createToDoItem(editFlag, text, importance, toDoItemId, toDoItemCreatedAt, toDoItemDeadline)
+        return vm.createToDoItem(
+            editFlag,
+            text,
+            importance,
+            toDoItemId,
+            toDoItemCreatedAt,
+            toDoItemDeadline
+        )
     }
 }
 

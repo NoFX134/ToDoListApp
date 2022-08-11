@@ -4,25 +4,19 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.R
-import ru.yandexschool.todolist.data.UpdateWorker
 import ru.yandexschool.todolist.data.mapper.Mapper
 import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
 import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
 import ru.yandexschool.todolist.presentation.utils.Resource
-import java.util.concurrent.TimeUnit
 
 class ToDoItemListFragment :
     BaseFragment<FragmentToDoItemListBinding>(FragmentToDoItemListBinding::inflate) {
@@ -84,11 +78,12 @@ class ToDoItemListFragment :
             bundle.apply {
                 putSerializable("toDoItem", null)
                 putSerializable("editFlag", false)
-                findNavController().navigate(
-                    R.id.action_toDoItemListFragment_to_toDoAddFragment,
-                    bundle
-                )
+
             }
+            findNavController().navigate(
+                R.id.action_toDoItemListFragment_to_toDoAddFragment,
+                bundle
+            )
         }
 
         toDoAdapter.setOnItemClickListener {
