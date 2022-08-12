@@ -4,6 +4,10 @@ import android.content.SharedPreferences
 
 private const val KEY_REVISION = "revision"
 
+/**
+ * Class to save and retrieve the latest revision
+ */
+
 class ListRevisionStorage(private val sharedPreferences: SharedPreferences) {
 
     fun save(revision: String) {

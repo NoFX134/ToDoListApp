@@ -2,32 +2,36 @@ package ru.yandexschool.todolist.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.yandexschool.todolist.data.mapper.ModelMapper
+import ru.yandexschool.todolist.data.mapper.DataClassMapper
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.data.remote.Api
 import ru.yandexschool.todolist.data.remote.RetrofitInstance
 import ru.yandexschool.todolist.utils.ListRevisionStorage
-import ru.yandexschool.todolist.utils.Resource
+import ru.yandexschool.todolist.utils.ResponseState
 import java.util.*
 
+/**
+ * A class for processing a data operation. To abstract the data layer from the rest of the application
+ */
+
 class ToDoItemRepository(
-    private val modelMapper: ModelMapper,
+    private val dataClassMapper: DataClassMapper,
     private val listRevisionStorage: ListRevisionStorage,
     private val api: Api
 ) {
 
-    fun fetchToDoItem(): Flow<Resource<List<ToDoItem>>> {
+    suspend fun fetchToDoItem(): Flow<ResponseState<List<ToDoItem>>> {
         return flow {
             try {
                 val response = api.fetchToDoItemList()
                 if (response.isSuccessful) {
                     response.body()?.let { resultResponse ->
                         listRevisionStorage.save(resultResponse.revision.toString())
-                        emit(Resource.Success(modelMapper.responseToDoToListItem(resultResponse)))
+                        emit(ResponseState.Success(dataClassMapper.responseToDoToListItem(resultResponse)))
                     }
-                } else emit(Resource.Error(response.code()))
+                } else emit(ResponseState.Error(response.code()))
             } catch (e: Exception) {
-                emit(Resource.Error(-1))
+                emit(ResponseState.Error(-1))
             }
         }
     }
@@ -36,7 +40,7 @@ class ToDoItemRepository(
         try {
             val response =
                 RetrofitInstance(listRevisionStorage).api.addToDoItem(
-                    modelMapper.toDoItemToPostToDo(
+                    dataClassMapper.toDoItemToPostToDo(
                         toDoItem
                     )
                 )
@@ -66,7 +70,7 @@ class ToDoItemRepository(
         try {
             val response = api.refreshToDoItem(
                 toDoItemId.toString(),
-                modelMapper.toDoItemToPostToDo(toDoItem)
+                dataClassMapper.toDoItemToPostToDo(toDoItem)
             )
             if (response.isSuccessful) {
                 listRevisionStorage.save(response.body()?.revision.toString())

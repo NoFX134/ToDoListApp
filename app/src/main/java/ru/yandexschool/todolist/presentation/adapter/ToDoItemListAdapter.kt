@@ -6,6 +6,10 @@ import androidx.recyclerview.widget.ListAdapter
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.ToDoItem
 
+/**
+ * Adapter for working with RecycleView in ToDoListFragment
+ */
+
 class ToDoItemListAdapter :
     ListAdapter<ToDoItem, ToDoItemViewHolder>(DiffCallback()) {
 

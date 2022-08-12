@@ -13,17 +13,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.R
-import ru.yandexschool.todolist.data.mapper.ModelMapper
+import ru.yandexschool.todolist.data.mapper.ErrorMapper
 import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
 import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
 import ru.yandexschool.todolist.presentation.ui.MainActivity
-import ru.yandexschool.todolist.presentation.ui.viewModels.MainViewModel
-import ru.yandexschool.todolist.utils.Resource
+import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModel
+import ru.yandexschool.todolist.utils.ResponseState
+
+/**
+ * Fragment for display list toDoItem
+ */
 
 class ToDoItemListFragment :
     BaseFragment<FragmentToDoItemListBinding>(FragmentToDoItemListBinding::inflate) {
 
-    private lateinit var vm: MainViewModel
+    private lateinit var vm: ToDoItemListViewModel
     private var toDoAdapter = ToDoItemListAdapter()
     private val connectivityManager by lazy {
         getSystemService(
@@ -43,7 +47,7 @@ class ToDoItemListFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-        vm = (activity as MainActivity).vm
+        vm = (activity as MainActivity).vmList
         initAdapter()
         init()
         initListeners()
@@ -60,13 +64,13 @@ class ToDoItemListFragment :
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.toDoItemListFlow.collect { resource ->
                     when (resource) {
-                        is Resource.Success -> {
+                        is ResponseState.Success -> {
                             toDoAdapter.submitList(resource.data)
                         }
-                        is Resource.Error -> {
+                        is ResponseState.Error -> {
                             showError(resource.message)
                         }
-                        is Resource.Loading -> showLoading()
+                        is ResponseState.Loading -> showLoading()
                     }
                 }
             }
@@ -111,12 +115,13 @@ class ToDoItemListFragment :
         }
     }
 
-    private fun showError(message: Int?) {
+    private fun showError(message: Int) {
+        val errorMapper = ErrorMapper(requireContext())
         when (message) {
             -1, 404, 500 -> {
                 Snackbar.make(
                     requireView(),
-                    ModelMapper(requireContext()).errorMapper(message),
+                    errorMapper.errorMapper(message),
                     Snackbar.LENGTH_INDEFINITE
                 ).apply {
                     setAction(getString(R.string.refresh)) {
@@ -124,10 +129,9 @@ class ToDoItemListFragment :
                     }
                 }.show()
             }
-
             else -> Snackbar.make(
                 requireView(),
-                ModelMapper(requireContext()).errorMapper(message),
+                errorMapper.errorMapper(message),
                 Snackbar.LENGTH_INDEFINITE
             ).show()
         }

@@ -6,6 +6,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.yandexschool.todolist.utils.ListRevisionStorage
 
+/**
+ * A class for creating an instance of retrofit
+ */
+
 const val BASE_URL = "https://beta.mrdekk.ru/todobackend/"
 
 class RetrofitInstance(private val listRevisionStorage: ListRevisionStorage) {

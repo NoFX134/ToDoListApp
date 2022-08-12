@@ -11,13 +11,17 @@ import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.databinding.FragmentToDoAddBinding
 import ru.yandexschool.todolist.presentation.ui.MainActivity
-import ru.yandexschool.todolist.presentation.ui.viewModels.MainViewModel
+import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoAddViewModel
 import ru.yandexschool.todolist.utils.dateToString
 import java.util.*
 
+/**
+ * Fragment for detailed display, editing, deleting ToDoItem
+ */
+
 class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBinding::inflate) {
 
-    private lateinit var vm: MainViewModel
+    private lateinit var vm: ToDoAddViewModel
     private val args: ToDoAddFragmentArgs by navArgs()
     private var editFlag = false
 
@@ -25,7 +29,7 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         super.onViewCreated(view, savedInstanceState)
         val toDoItemEdit = args.toDoItem
         editFlag = args.editFlag
-        vm = (activity as MainActivity).vm
+        vm = (activity as MainActivity).vmAdd
         initSpinner()
         initToDo(toDoItemEdit)
         initListeners(toDoItemEdit)

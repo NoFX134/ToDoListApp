@@ -3,6 +3,10 @@ package ru.yandexschool.todolist.data.model
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
+/**
+ * Model for GET request
+ */
+
 data class ResponseToDo(
     @field:SerializedName("list")
     val list: List<ListItem>,

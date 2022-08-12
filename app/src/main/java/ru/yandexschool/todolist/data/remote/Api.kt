@@ -7,6 +7,10 @@ import ru.yandexschool.todolist.data.model.PostToDo
 import ru.yandexschool.todolist.data.model.ResponseToDo
 import ru.yandexschool.todolist.data.model.ToDoItem
 
+/**
+ * Retrofit interface for setting server requests
+ */
+
 interface Api {
 
     @GET("list")

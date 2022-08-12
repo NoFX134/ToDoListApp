@@ -11,6 +11,10 @@ import ru.yandexschool.todolist.databinding.ToDoCellBinding
 import ru.yandexschool.todolist.utils.dateToString
 import java.util.*
 
+/**
+ * ViewHolder for ToDoItemListAdapter
+ */
+
 class ToDoItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private var binding: ToDoCellBinding = ToDoCellBinding.bind(itemView)

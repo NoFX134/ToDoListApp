@@ -2,33 +2,23 @@ package ru.yandexschool.todolist.presentation.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.data.ToDoItemRepository
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
-import ru.yandexschool.todolist.utils.Resource
 import ru.yandexschool.todolist.utils.stringToDate
 import java.util.*
 
-class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewModel() {
+/**
+ * ViewModel for ToDoItemAddFragment
+ */
 
-    private val _toDoItemListFlow: MutableStateFlow<Resource<List<ToDoItem>>> =
-        MutableStateFlow(Resource.Loading())
-    val toDoItemListFlow: StateFlow<Resource<List<ToDoItem>>> = _toDoItemListFlow
-
-    init {
-        fetchToDoItem()
-    }
+class ToDoAddViewModel(private val toDoItemRepository: ToDoItemRepository): ViewModel() {
 
     fun addToDoItemApi(toDoItem: ToDoItem) {
         viewModelScope.launch {
             toDoItemRepository.addTodoItem(toDoItem)
-
         }
-        fetchToDoItem()
     }
 
     fun deleteToDoItem(toDoItemId: UUID) {
@@ -36,16 +26,13 @@ class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewMo
             toDoItemRepository.deleteTodoItem(toDoItemId)
 
         }
-        fetchToDoItem()
     }
 
     fun refreshToDoItem(toDoItemId: UUID, toDoItem: ToDoItem) {
         viewModelScope.launch {
             toDoItemRepository.refreshToDoItem(toDoItemId, toDoItem)
         }
-        fetchToDoItem()
     }
-
 
     fun createToDoItem(
         editFlag: Boolean,
@@ -82,16 +69,5 @@ class MainViewModel(private val toDoItemRepository: ToDoItemRepository) : ViewMo
             changedAt = Date(),
             createdAt = toDoItemCreatedAt
         )
-    }
-
-    fun fetchToDoItem() {
-        viewModelScope.launch {
-            delay(1000)
-            _toDoItemListFlow.value = Resource.Loading()
-            toDoItemRepository.fetchToDoItem()
-                .collect { resource ->
-                    _toDoItemListFlow.value = resource
-                }
-        }
     }
 }
