@@ -1,6 +1,5 @@
 package ru.yandexschool.todolist.presentation.ui.fragment
 
-import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -20,7 +19,6 @@ import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.mapper.ErrorMapper
 import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
 import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
-import ru.yandexschool.todolist.presentation.ui.MainActivity
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModel
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModelFactory
 import ru.yandexschool.todolist.utils.ResponseState
@@ -60,8 +58,9 @@ class ToDoItemListFragment :
     }
 
     override fun onAttach(context: Context) {
-        (context.applicationContext as App).appComponent.inject(this)
         super.onAttach(context)
+        (context.applicationContext as App).appComponent.toDoItemListFragmentComponent().create()
+            .inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,17 +1,21 @@
 package ru.yandexschool.todolist.workers
 
 import android.content.Context
+import android.util.Log
 import androidx.work.CoroutineWorker
-import androidx.work.Worker
 import androidx.work.WorkerParameters
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import ru.yandexschool.todolist.data.ToDoItemRepository
-import javax.inject.Inject
+import ru.yandexschool.todolist.di.scope.ApplicationScope
 
 
-class UpdateWorker (context: Context, params: WorkerParameters) :
-    CoroutineWorker(context, params) {
-
-    @Inject lateinit var repository: ToDoItemRepository
+class UpdateWorker @AssistedInject constructor(
+    @Assisted private val context: Context,
+    @Assisted private val params: WorkerParameters,
+    private val repository: ToDoItemRepository
+) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
         try {
@@ -20,5 +24,11 @@ class UpdateWorker (context: Context, params: WorkerParameters) :
         } catch (e: Exception) {
             return Result.failure()
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+
+        fun create(appContext: Context, params: WorkerParameters): UpdateWorker
     }
 }

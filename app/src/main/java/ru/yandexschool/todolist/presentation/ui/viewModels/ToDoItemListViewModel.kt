@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.data.ToDoItemRepository
 import ru.yandexschool.todolist.data.model.ToDoItem
+import ru.yandexschool.todolist.di.scope.FragmentScope
 import ru.yandexschool.todolist.utils.ResponseState
 import javax.inject.Inject
 
@@ -18,7 +19,8 @@ import javax.inject.Inject
  * ViewModel for ToDoItemListFragment
  */
 
-class ToDoItemListViewModel @AssistedInject constructor(private val toDoItemRepository: ToDoItemRepository) :
+@FragmentScope
+class ToDoItemListViewModel @Inject constructor(private val toDoItemRepository: ToDoItemRepository) :
     ViewModel() {
 
     private val _toDoItemListFlow: MutableStateFlow<ResponseState<List<ToDoItem>>> =

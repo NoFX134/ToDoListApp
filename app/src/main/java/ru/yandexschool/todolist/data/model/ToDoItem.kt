@@ -14,7 +14,7 @@ data class ToDoItem(
     val deadline: Date? = null,
     val done: Boolean = false,
     val createdAt: Date? = Date(),
-    val changedAt: Date
+    val changedAt: Date?
 ): Serializable
 
 enum class Importance {

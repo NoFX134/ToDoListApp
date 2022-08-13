@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.yandexschool.todolist.data.ToDoItemRepository
-import javax.inject.Inject
+import ru.yandexschool.todolist.di.scope.FragmentScope
 
 /**
  * Factory for create ToDoItemListViewModelModel
@@ -20,6 +20,7 @@ class ToDoAddViewModelFactory @AssistedInject constructor(
         return ToDoAddViewModel(toDoItemRepository) as T
     }
 
+    @FragmentScope
     @AssistedFactory
     interface Factory {
 

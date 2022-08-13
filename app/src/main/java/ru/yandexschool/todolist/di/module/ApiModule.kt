@@ -9,8 +9,8 @@ import ru.yandexschool.todolist.di.scope.ApplicationScope
 @Module
 class ApiModule {
 
-    @ApplicationScope
     @Provides
+    @ApplicationScope
     fun provideApi(retrofit: Retrofit): Api = retrofit.create(Api::class.java)
 
 }

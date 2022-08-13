@@ -10,13 +10,12 @@ import javax.inject.Inject
  * A class for adding HEADERS to Retrofit network requests
  */
 
-class AuthInterceptor @Inject constructor() : Interceptor {
-
-    private val token = "SaidaIarberos"
+class RevisionInterceptor @Inject constructor(private val listRevisionStorage: ListRevisionStorage) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
-        requestBuilder.addHeader("Authorization", "Bearer $token")
+        val revision = listRevisionStorage.get()
+        requestBuilder.addHeader("X-Last-Known-Revision", revision)
         return chain.proceed(requestBuilder.build())
     }
 }

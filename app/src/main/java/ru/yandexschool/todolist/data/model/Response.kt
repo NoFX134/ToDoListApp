@@ -18,16 +18,16 @@ data class ResponseToDo(
 
 data class ListItem(
 
-    val id: UUID?,
-    val text: String,
+    val id: UUID? = null,
+    val text: String? = null,
     val importance: String? = null,
     val color: String? = null,
     val deadline: Long? = null,
     val done: Boolean = false,
     @field:SerializedName("created_at")
-    val createdAt: Long,
+    val createdAt: Long? = null,
     @field:SerializedName("changed_at")
-    val changedAt: Long,
+    val changedAt: Long? = null,
     @field:SerializedName("last_updated_by")
-    val lastUpdatedBy: String? = null,
+    val lastUpdatedBy: String? = null
 )

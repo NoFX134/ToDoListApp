@@ -13,11 +13,8 @@ import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.databinding.FragmentToDoAddBinding
-import ru.yandexschool.todolist.presentation.ui.MainActivity
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoAddViewModel
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoAddViewModelFactory
-import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModel
-import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModelFactory
 import ru.yandexschool.todolist.utils.dateToString
 import java.util.*
 import javax.inject.Inject
@@ -36,8 +33,9 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
     lateinit var factory: ToDoAddViewModelFactory.Factory
 
     override fun onAttach(context: Context) {
-        (context.applicationContext as App).appComponent.inject(this)
         super.onAttach(context)
+        (requireActivity().application as App).appComponent.toDoAddFragmentComponent().create()
+            .inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

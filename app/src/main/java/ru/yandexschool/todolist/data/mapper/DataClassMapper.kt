@@ -15,7 +15,8 @@ import javax.inject.Inject
 class DataClassMapper @Inject constructor(private var application: Application) {
 
     @SuppressLint("HardwareIds")
-    private val id = Settings.Secure.getString(application.contentResolver, Settings.Secure.ANDROID_ID)
+    private val id =
+        Settings.Secure.getString(application.contentResolver, Settings.Secure.ANDROID_ID)
 
     fun responseToDoToListItem(remote: ResponseToDo): MutableList<ToDoItem> {
         return remote.list.map { listItemToToDoItem(it) } as MutableList<ToDoItem>
@@ -35,27 +36,27 @@ class DataClassMapper @Inject constructor(private var application: Application) 
                 deadline = toDoItem.deadline?.time,
                 done = toDoItem.done,
                 createdAt = toDoItem.createdAt?.time ?: 0,
-                changedAt = toDoItem.changedAt.time,
+                changedAt = toDoItem.changedAt?.time,
                 lastUpdatedBy = id
             ),
             status = "ok"
         )
     }
 
-private fun listItemToToDoItem(list: ListItem): ToDoItem {
-    return ToDoItem(
-        id = list.id,
-        text = list.text,
-        importance = when (list.importance) {
-            application.getString(R.string.importance_low) -> Importance.LOW
-            application.getString(R.string.importance_basic) -> Importance.BASIC
-            application.getString(R.string.importance_important) -> Importance.IMPORTANT
-            else -> Importance.BASIC
-        },
-        deadline = list.deadline?.let { Date(it) },
-        done = list.done,
-        createdAt = Date(list.createdAt),
-        changedAt = Date(list.changedAt),
-    )
-}
+    private fun listItemToToDoItem(list: ListItem): ToDoItem {
+        return ToDoItem(
+            id = list.id,
+            text = list.text.toString(),
+            importance = when (list.importance) {
+                application.getString(R.string.importance_low) -> Importance.LOW
+                application.getString(R.string.importance_basic) -> Importance.BASIC
+                application.getString(R.string.importance_important) -> Importance.IMPORTANT
+                else -> Importance.BASIC
+            },
+            deadline = list.deadline?.let { Date(it) },
+            done = list.done,
+            createdAt = list.createdAt?.let { Date(it) },
+            changedAt = list.changedAt?.let { Date(it) },
+        )
+    }
 }

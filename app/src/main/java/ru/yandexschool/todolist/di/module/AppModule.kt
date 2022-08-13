@@ -13,16 +13,19 @@ import javax.inject.Singleton
 class AppModule {
 
     companion object {
+
         const val SHARED_PREFS_NAME = "shared_prefs_name"
     }
 
-    @ApplicationScope
+
     @Provides
+    @ApplicationScope
     fun provideSharedPreferences(application: Application): SharedPreferences =
         application.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
 
-    @ApplicationScope
+
     @Provides
+    @ApplicationScope
     fun provideErrorMapper(application: Application): ErrorMapper =
         ErrorMapper(application)
 

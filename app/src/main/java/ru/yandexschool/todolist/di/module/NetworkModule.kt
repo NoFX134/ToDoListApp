@@ -8,6 +8,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.yandexschool.todolist.data.remote.AuthInterceptor
+import ru.yandexschool.todolist.data.remote.RevisionInterceptor
 import ru.yandexschool.todolist.di.scope.ApplicationScope
 import ru.yandexschool.todolist.utils.ListRevisionStorage
 
@@ -15,16 +16,10 @@ import ru.yandexschool.todolist.utils.ListRevisionStorage
 class NetworkModule {
 
     companion object {
+
         private const val BASE_URL = "https://beta.mrdekk.ru/todobackend/"
     }
 
-
-    @ApplicationScope
-    @Provides
-    fun providesAuthInterceptor(listRevisionStorage: ListRevisionStorage): Interceptor =
-        AuthInterceptor(listRevisionStorage)
-
-    @ApplicationScope
     @Provides
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         val loggingInterceptor = HttpLoggingInterceptor()
@@ -32,20 +27,22 @@ class NetworkModule {
         return loggingInterceptor
     }
 
-    @ApplicationScope
     @Provides
+    @ApplicationScope
     fun provideOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
-        authInterceptor: AuthInterceptor
+        authInterceptor: AuthInterceptor,
+        revisionInterceptor: RevisionInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
+            .addInterceptor(revisionInterceptor)
             .build()
     }
 
-    @ApplicationScope
     @Provides
+    @ApplicationScope
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())

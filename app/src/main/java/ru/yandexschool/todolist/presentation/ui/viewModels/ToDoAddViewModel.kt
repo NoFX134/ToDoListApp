@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.data.ToDoItemRepository
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
+import ru.yandexschool.todolist.di.scope.FragmentScope
 import ru.yandexschool.todolist.utils.stringToDate
 import java.util.*
 import javax.inject.Inject
@@ -15,6 +16,7 @@ import javax.inject.Inject
  * ViewModel for ToDoItemAddFragment
  */
 
+@FragmentScope
 class ToDoAddViewModel @Inject constructor(private val toDoItemRepository: ToDoItemRepository) :
     ViewModel() {
 

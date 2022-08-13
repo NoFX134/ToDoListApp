@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.flow
 import ru.yandexschool.todolist.data.mapper.DataClassMapper
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.data.remote.Api
+import ru.yandexschool.todolist.di.scope.ApplicationScope
 import ru.yandexschool.todolist.utils.ListRevisionStorage
 import ru.yandexschool.todolist.utils.ResponseState
 import java.util.*
@@ -14,7 +15,7 @@ import javax.inject.Inject
 /**
  * A class for processing a data operation. To abstract the data layer from the rest of the application
  */
-
+@ApplicationScope
 class ToDoItemRepository @Inject constructor(
     private val dataClassMapper: DataClassMapper,
     private val listRevisionStorage: ListRevisionStorage,
