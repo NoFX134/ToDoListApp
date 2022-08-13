@@ -1,20 +1,21 @@
 package ru.yandexschool.todolist.data.mapper
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.app.Application
 import android.provider.Settings
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.*
 import java.util.*
+import javax.inject.Inject
 
 /**
  * The class is designed to convert data classes
  */
 
-class DataClassMapper(private var context: Context) {
+class DataClassMapper @Inject constructor(private var application: Application) {
 
     @SuppressLint("HardwareIds")
-    private val id = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+    private val id = Settings.Secure.getString(application.contentResolver, Settings.Secure.ANDROID_ID)
 
     fun responseToDoToListItem(remote: ResponseToDo): MutableList<ToDoItem> {
         return remote.list.map { listItemToToDoItem(it) } as MutableList<ToDoItem>
@@ -27,9 +28,9 @@ class DataClassMapper(private var context: Context) {
                 id = toDoItem.id,
                 text = toDoItem.text,
                 importance = when (toDoItem.importance) {
-                    Importance.LOW -> context.getString(R.string.importance_low)
-                    Importance.BASIC -> context.getString(R.string.importance_basic)
-                    Importance.IMPORTANT -> context.getString(R.string.importance_important)
+                    Importance.LOW -> application.getString(R.string.importance_low)
+                    Importance.BASIC -> application.getString(R.string.importance_basic)
+                    Importance.IMPORTANT -> application.getString(R.string.importance_important)
                 },
                 deadline = toDoItem.deadline?.time,
                 done = toDoItem.done,
@@ -46,9 +47,9 @@ private fun listItemToToDoItem(list: ListItem): ToDoItem {
         id = list.id,
         text = list.text,
         importance = when (list.importance) {
-            context.getString(R.string.importance_low) -> Importance.LOW
-            context.getString(R.string.importance_basic) -> Importance.BASIC
-            context.getString(R.string.importance_important) -> Importance.IMPORTANT
+            application.getString(R.string.importance_low) -> Importance.LOW
+            application.getString(R.string.importance_basic) -> Importance.BASIC
+            application.getString(R.string.importance_important) -> Importance.IMPORTANT
             else -> Importance.BASIC
         },
         deadline = list.deadline?.let { Date(it) },

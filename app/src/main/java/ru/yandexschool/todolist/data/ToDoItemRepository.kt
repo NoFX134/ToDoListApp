@@ -1,20 +1,21 @@
 package ru.yandexschool.todolist.data
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.yandexschool.todolist.data.mapper.DataClassMapper
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.data.remote.Api
-import ru.yandexschool.todolist.data.remote.RetrofitInstance
 import ru.yandexschool.todolist.utils.ListRevisionStorage
 import ru.yandexschool.todolist.utils.ResponseState
 import java.util.*
+import javax.inject.Inject
 
 /**
  * A class for processing a data operation. To abstract the data layer from the rest of the application
  */
 
-class ToDoItemRepository(
+class ToDoItemRepository @Inject constructor(
     private val dataClassMapper: DataClassMapper,
     private val listRevisionStorage: ListRevisionStorage,
     private val api: Api
@@ -39,7 +40,7 @@ class ToDoItemRepository(
     suspend fun addTodoItem(toDoItem: ToDoItem) {
         try {
             val response =
-                RetrofitInstance(listRevisionStorage).api.addToDoItem(
+               api.addToDoItem(
                     dataClassMapper.toDoItemToPostToDo(
                         toDoItem
                     )

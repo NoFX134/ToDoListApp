@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import ru.yandexschool.todolist.App
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.mapper.ErrorMapper
 import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
@@ -19,6 +20,7 @@ import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
 import ru.yandexschool.todolist.presentation.ui.MainActivity
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModel
 import ru.yandexschool.todolist.utils.ResponseState
+import javax.inject.Inject
 
 /**
  * Fragment for display list toDoItem
@@ -27,6 +29,7 @@ import ru.yandexschool.todolist.utils.ResponseState
 class ToDoItemListFragment :
     BaseFragment<FragmentToDoItemListBinding>(FragmentToDoItemListBinding::inflate) {
 
+    @Inject lateinit var errorMapper: ErrorMapper
     private lateinit var vm: ToDoItemListViewModel
     private var toDoAdapter = ToDoItemListAdapter()
     private val connectivityManager by lazy {
@@ -42,6 +45,11 @@ class ToDoItemListFragment :
                 vm.fetchToDoItem()
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity?.application as App).appComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,9 +75,11 @@ class ToDoItemListFragment :
                         is ResponseState.Success -> {
                             toDoAdapter.submitList(resource.data)
                         }
+
                         is ResponseState.Error -> {
                             showError(resource.message)
                         }
+
                         is ResponseState.Loading -> showLoading()
                     }
                 }
@@ -116,7 +126,6 @@ class ToDoItemListFragment :
     }
 
     private fun showError(message: Int) {
-        val errorMapper = ErrorMapper(requireContext())
         when (message) {
             -1, 404, 500 -> {
                 Snackbar.make(
@@ -129,6 +138,7 @@ class ToDoItemListFragment :
                     }
                 }.show()
             }
+
             else -> Snackbar.make(
                 requireView(),
                 errorMapper.errorMapper(message),

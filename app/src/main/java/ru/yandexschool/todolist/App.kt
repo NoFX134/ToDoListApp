@@ -1,6 +1,7 @@
 package ru.yandexschool.todolist
 
 import android.app.Application
+import android.content.Context
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -12,10 +13,11 @@ import java.util.concurrent.TimeUnit
 class App : Application() {
 
     lateinit var appComponent: AppComponent
+    private set
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent.factory().create(applicationContext)
+        appComponent = DaggerAppComponent.factory().create(this)
         val request = PeriodicWorkRequestBuilder<UpdateWorker>(8, TimeUnit.HOURS).build()
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
             "ToDoItemUpdateWork",
@@ -24,3 +26,4 @@ class App : Application() {
         )
     }
 }
+

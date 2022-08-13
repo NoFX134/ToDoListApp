@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import ru.yandexschool.todolist.data.ToDoItemRepository
 
 /**
- * Factory for create ToDoItemListViewModel
+ * Factory for create ToDoItemListViewModelModel
  */
 
 @Suppress("UNCHECKED_CAST")

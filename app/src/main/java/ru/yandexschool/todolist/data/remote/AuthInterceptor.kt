@@ -4,12 +4,13 @@ package ru.yandexschool.todolist.data.remote
 import okhttp3.Interceptor
 import okhttp3.Response
 import ru.yandexschool.todolist.utils.ListRevisionStorage
+import javax.inject.Inject
 
 /**
  * A class for adding HEADERS to Retrofit network requests
  */
 
-class AuthInterceptor(private val listRevisionStorage: ListRevisionStorage) : Interceptor {
+class AuthInterceptor @Inject constructor(private val listRevisionStorage: ListRevisionStorage) : Interceptor {
 
     private val token = "SaidaIarberos"
 

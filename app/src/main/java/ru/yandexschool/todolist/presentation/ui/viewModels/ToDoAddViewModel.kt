@@ -2,34 +2,37 @@ package ru.yandexschool.todolist.presentation.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.data.ToDoItemRepository
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.utils.stringToDate
 import java.util.*
+import javax.inject.Inject
 
 /**
  * ViewModel for ToDoItemAddFragment
  */
 
-class ToDoAddViewModel(private val toDoItemRepository: ToDoItemRepository): ViewModel() {
+class ToDoAddViewModel @Inject constructor(private val toDoItemRepository: ToDoItemRepository) :
+    ViewModel() {
 
     fun addToDoItemApi(toDoItem: ToDoItem) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             toDoItemRepository.addTodoItem(toDoItem)
         }
     }
 
     fun deleteToDoItem(toDoItemId: UUID) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             toDoItemRepository.deleteTodoItem(toDoItemId)
 
         }
     }
 
     fun refreshToDoItem(toDoItemId: UUID, toDoItem: ToDoItem) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             toDoItemRepository.refreshToDoItem(toDoItemId, toDoItem)
         }
     }
@@ -52,7 +55,7 @@ class ToDoAddViewModel(private val toDoItemRepository: ToDoItemRepository): View
                 2 -> Importance.IMPORTANT
                 else -> Importance.BASIC
             },
-            deadline= toDoItemDeadline.stringToDate("dd-MM-yyyy"),
+            deadline = toDoItemDeadline.stringToDate("dd-MM-yyyy"),
             createdAt = Date(),
             changedAt = Date()
         ) else return ToDoItem(
@@ -65,7 +68,7 @@ class ToDoAddViewModel(private val toDoItemRepository: ToDoItemRepository): View
                 2 -> Importance.IMPORTANT
                 else -> Importance.BASIC
             },
-            deadline= toDoItemDeadline.stringToDate("dd-MM-yyyy"),
+            deadline = toDoItemDeadline.stringToDate("dd-MM-yyyy"),
             changedAt = Date(),
             createdAt = toDoItemCreatedAt
         )
