@@ -5,12 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.ToDoItem
+import javax.inject.Inject
 
 /**
  * Adapter for working with RecycleView in ToDoListFragment
  */
 
-class ToDoItemListAdapter :
+class ToDoItemListAdapter @Inject constructor():
     ListAdapter<ToDoItem, ToDoItemViewHolder>(DiffCallback()) {
 
     private var onItemClickListener: ((ToDoItem) -> Unit)? = null

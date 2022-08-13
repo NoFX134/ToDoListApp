@@ -26,9 +26,5 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         (application as App).appComponent.inject(this)
-        val viewModelProviderFactoryVmList = ToDoItemListViewModelFactory(toDoItemRepository)
-        val viewModelProviderFactoryVmAdd = ToDoAddViewModelFactory(toDoItemRepository)
-        vmList = ViewModelProvider(this, viewModelProviderFactoryVmList)[ToDoItemListViewModel::class.java]
-        vmAdd = ViewModelProvider(this, viewModelProviderFactoryVmAdd)[ToDoAddViewModel::class.java]
     }
 }

@@ -1,10 +1,13 @@
 package ru.yandexschool.todolist.presentation.ui.fragment
 
+import android.app.Application
+import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,6 +22,7 @@ import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
 import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
 import ru.yandexschool.todolist.presentation.ui.MainActivity
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModel
+import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModelFactory
 import ru.yandexschool.todolist.utils.ResponseState
 import javax.inject.Inject
 
@@ -29,9 +33,17 @@ import javax.inject.Inject
 class ToDoItemListFragment :
     BaseFragment<FragmentToDoItemListBinding>(FragmentToDoItemListBinding::inflate) {
 
-    @Inject lateinit var errorMapper: ErrorMapper
-    private lateinit var vm: ToDoItemListViewModel
-    private var toDoAdapter = ToDoItemListAdapter()
+    private val vm: ToDoItemListViewModel by viewModels { factory.create() }
+
+    @Inject
+    lateinit var factory: ToDoItemListViewModelFactory.Factory
+
+    @Inject
+    lateinit var errorMapper: ErrorMapper
+
+    @Inject
+    lateinit var toDoAdapter: ToDoItemListAdapter
+
     private val connectivityManager by lazy {
         getSystemService(
             requireContext(),
@@ -47,15 +59,14 @@ class ToDoItemListFragment :
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity?.application as App).appComponent.inject(this)
+    override fun onAttach(context: Context) {
+        (context.applicationContext as App).appComponent.inject(this)
+        super.onAttach(context)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-        vm = (activity as MainActivity).vmList
         initAdapter()
         init()
         initListeners()
@@ -72,14 +83,8 @@ class ToDoItemListFragment :
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.toDoItemListFlow.collect { resource ->
                     when (resource) {
-                        is ResponseState.Success -> {
-                            toDoAdapter.submitList(resource.data)
-                        }
-
-                        is ResponseState.Error -> {
-                            showError(resource.message)
-                        }
-
+                        is ResponseState.Success -> toDoAdapter.submitList(resource.data)
+                        is ResponseState.Error -> showError(resource.message)
                         is ResponseState.Loading -> showLoading()
                     }
                 }
@@ -97,7 +102,6 @@ class ToDoItemListFragment :
             bundle.apply {
                 putSerializable("toDoItem", null)
                 putSerializable("editFlag", false)
-
             }
             findNavController().navigate(
                 R.id.action_toDoItemListFragment_to_toDoAddFragment,
@@ -127,7 +131,7 @@ class ToDoItemListFragment :
 
     private fun showError(message: Int) {
         when (message) {
-            -1, 404, 500 -> {
+            500 -> {
                 Snackbar.make(
                     requireView(),
                     errorMapper.errorMapper(message),
@@ -142,7 +146,7 @@ class ToDoItemListFragment :
             else -> Snackbar.make(
                 requireView(),
                 errorMapper.errorMapper(message),
-                Snackbar.LENGTH_INDEFINITE
+                Snackbar.LENGTH_SHORT
             ).show()
         }
     }

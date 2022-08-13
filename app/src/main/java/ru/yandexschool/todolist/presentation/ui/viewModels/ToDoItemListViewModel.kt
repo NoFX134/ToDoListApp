@@ -2,6 +2,8 @@ package ru.yandexschool.todolist.presentation.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,8 @@ import javax.inject.Inject
  * ViewModel for ToDoItemListFragment
  */
 
-class ToDoItemListViewModel @Inject constructor(private val toDoItemRepository: ToDoItemRepository) : ViewModel() {
+class ToDoItemListViewModel @AssistedInject constructor(private val toDoItemRepository: ToDoItemRepository) :
+    ViewModel() {
 
     private val _toDoItemListFlow: MutableStateFlow<ResponseState<List<ToDoItem>>> =
         MutableStateFlow(ResponseState.Loading())
