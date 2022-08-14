@@ -19,21 +19,41 @@ class ToDoItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private var binding: ToDoCellBinding = ToDoCellBinding.bind(itemView)
 
-    fun bind(toDoItem: ToDoItem, onItemClickListener: ((ToDoItem) -> Unit)?) = with(binding) {
-        itemView.setOnClickListener {
-            onItemClickListener?.let {
-                it(toDoItem)
-            }
-        }
+    fun bind(
+        toDoItem: ToDoItem, onItemClickListener: ((ToDoItem) -> Unit)?,
+        checkBoxClickListener: ((ToDoItem, Boolean) -> Unit)?
+    ) = with(binding) {
+        initListeners(toDoItem, onItemClickListener, checkBoxClickListener)
         setDeadline(toDoItem.deadline)
         setImportance(toDoItem)
         setCheckBox(toDoItem)
     }
 
+    private fun initListeners(
+        toDoItem: ToDoItem,
+        onItemClickListener: ((ToDoItem) -> Unit)?,
+        checkBoxClickListener: ((ToDoItem, Boolean) -> Unit)?
+    ) {
+        with(binding)
+        {
+            itemView.setOnClickListener {
+                onItemClickListener?.let {
+                    it(toDoItem)
+                }
+            }
+            cbCheck.setOnClickListener {
+                checkBoxClickListener?.let { it1 -> it1(toDoItem, cbCheck.isChecked) }
+            }
+            cbCheckRed.setOnClickListener {
+                checkBoxClickListener?.let { it1 -> it1(toDoItem, cbCheckRed.isChecked) }
+            }
+        }
+    }
+
     private fun setDeadline(deadline: Date?) {
         with(binding)
         {
-            if (deadline!=null) {
+            if (deadline != null) {
                 tvDeadline.text = deadline.dateToString("dd MMMM yyyy")
                 tvDeadline.visibility = View.VISIBLE
             } else {

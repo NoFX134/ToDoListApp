@@ -119,6 +119,9 @@ class ToDoItemListFragment :
                 bundle
             )
         }
+        toDoAdapter.checkBoxClickListener {toDoItem, done ->
+           vm.setDone(toDoItem,done)
+        }
     }
 
     private fun initAdapter() {

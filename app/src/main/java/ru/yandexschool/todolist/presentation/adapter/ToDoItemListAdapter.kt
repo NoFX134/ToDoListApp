@@ -15,9 +15,13 @@ class ToDoItemListAdapter @Inject constructor():
     ListAdapter<ToDoItem, ToDoItemViewHolder>(DiffCallback()) {
 
     private var onItemClickListener: ((ToDoItem) -> Unit)? = null
+    private var checkBoxClickListener: ((ToDoItem, Boolean) -> Unit)? = null
 
     fun setOnItemClickListener(listener: (ToDoItem) -> Unit) {
         onItemClickListener = listener
+    }
+    fun checkBoxClickListener(listener: (ToDoItem, Boolean) -> Unit) {
+        checkBoxClickListener = listener
     }
 
 
@@ -28,7 +32,7 @@ class ToDoItemListAdapter @Inject constructor():
     }
 
     override fun onBindViewHolder(holder: ToDoItemViewHolder, position: Int) {
-        getItem(position).let { holder.bind(it, onItemClickListener) }
+        getItem(position).let { holder.bind(it, onItemClickListener, checkBoxClickListener) }
     }
 }
 

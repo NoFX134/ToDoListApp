@@ -13,6 +13,7 @@ import ru.yandexschool.todolist.data.ToDoItemRepository
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.di.scope.FragmentScope
 import ru.yandexschool.todolist.utils.ResponseState
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -33,12 +34,19 @@ class ToDoItemListViewModel @Inject constructor(private val toDoItemRepository: 
 
     fun fetchToDoItem() {
         viewModelScope.launch(Dispatchers.IO) {
-            delay(1000)
             _toDoItemListFlow.value = ResponseState.Loading()
             toDoItemRepository.fetchToDoItem()
                 .collect { resource ->
                     _toDoItemListFlow.value = resource
                 }
         }
+    }
+
+    fun setDone(toDoItem: ToDoItem, done: Boolean) {
+        val toDoItemNew = toDoItem.copy(done = done)
+        viewModelScope.launch(Dispatchers.IO) {
+            toDoItem.id?.let { toDoItemRepository.refreshToDoItem(it, toDoItemNew) }
+        }
+
     }
 }
