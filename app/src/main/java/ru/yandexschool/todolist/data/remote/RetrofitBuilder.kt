@@ -16,10 +16,13 @@ class RetrofitInstance(private val listRevisionStorage: ListRevisionStorage) {
 
     private val retrofit by lazy {
         val logging = HttpLoggingInterceptor()
+        val authInterceptor = AuthInterceptor()
+        val revisionInterceptor = RevisionInterceptor(listRevisionStorage)
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
         val client = OkHttpClient.Builder()
             .addInterceptor(logging)
-            .addInterceptor(AuthInterceptor(listRevisionStorage))
+            .addInterceptor(authInterceptor)
+            .addInterceptor(revisionInterceptor)
             .build()
         Retrofit.Builder()
             .baseUrl(BASE_URL)

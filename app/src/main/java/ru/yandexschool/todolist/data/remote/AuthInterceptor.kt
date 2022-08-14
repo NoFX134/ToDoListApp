@@ -9,7 +9,7 @@ import ru.yandexschool.todolist.utils.ListRevisionStorage
  * A class for adding Authorization HEADERS to Retrofit network requests
  */
 
-class AuthInterceptor(private val listRevisionStorage: ListRevisionStorage) : Interceptor {
+class AuthInterceptor() : Interceptor {
 
     private val token = "SaidaIarberos"
 
