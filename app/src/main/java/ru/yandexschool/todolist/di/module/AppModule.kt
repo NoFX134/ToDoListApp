@@ -22,11 +22,4 @@ class AppModule {
     @ApplicationScope
     fun provideSharedPreferences(application: Application): SharedPreferences =
         application.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-
-
-    @Provides
-    @ApplicationScope
-    fun provideErrorMapper(application: Application): ErrorMapper =
-        ErrorMapper(application)
-
 }
