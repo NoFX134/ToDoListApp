@@ -17,7 +17,6 @@ class AppModule {
         const val SHARED_PREFS_NAME = "shared_prefs_name"
     }
 
-
     @Provides
     @ApplicationScope
     fun provideSharedPreferences(application: Application): SharedPreferences =
