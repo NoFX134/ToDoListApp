@@ -6,17 +6,16 @@ import okhttp3.Response
 import ru.yandexschool.todolist.utils.ListRevisionStorage
 
 /**
- * A class for adding Authorization HEADERS to Retrofit network requests
+ * A class for adding Revision HEADERS to Retrofit network requests
  */
 
-class AuthInterceptor() : Interceptor {
-
-    private val token = "SaidaIarberos"
+class RevisionInterceptor(private val listRevisionStorage: ListRevisionStorage) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
-        requestBuilder.addHeader("Content-Type", "application/json")
-            .addHeader("Authorization", "Bearer $token")
+        val revision = listRevisionStorage.get()
+        requestBuilder.addHeader("X-Last-Known-Revision", revision)
+            .addHeader("Content-Type", "application/json")
         return chain.proceed(requestBuilder.build())
     }
 }

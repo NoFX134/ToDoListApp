@@ -1,4 +1,4 @@
-package ru.yandexschool.todolist.presentation.ui
+package ru.yandexschool.todolist.presentation.ui.fragment
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -6,27 +6,30 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.snackbar.Snackbar
 import ru.yandexschool.todolist.R
-import ru.yandexschool.todolist.data.mapper.Mapper
-import ru.yandexschool.todolist.data.model.*
+import ru.yandexschool.todolist.data.model.Importance
+import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.databinding.FragmentToDoAddBinding
-import ru.yandexschool.todolist.presentation.utils.dateToString
-import java.text.SimpleDateFormat
+import ru.yandexschool.todolist.presentation.ui.MainActivity
+import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoAddViewModel
+import ru.yandexschool.todolist.utils.dateToString
 import java.util.*
+
+/**
+ * Fragment for detailed display, editing, deleting ToDoItem
+ */
 
 class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBinding::inflate) {
 
-    private lateinit var vm: MainViewModel
+    private lateinit var vm: ToDoAddViewModel
     private val args: ToDoAddFragmentArgs by navArgs()
     private var editFlag = false
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val toDoItemEdit = args.toDoItem
         editFlag = args.editFlag
-        vm = (activity as MainActivity).vm
+        vm = (activity as MainActivity).vmAdd
         initSpinner()
         initToDo(toDoItemEdit)
         initListeners(toDoItemEdit)
@@ -40,12 +43,10 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                val myFormat = "dd-MM-yyyy"
-                val sdf = SimpleDateFormat(myFormat, Locale("ru"))
-                binding.tvDeadlineDate.text = sdf.format(cal.time)
+                binding.tvDeadlineDate.text = cal.time.dateToString("dd-MM-yyyy")
             }
         binding.swDatePicker.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
+            if (isChecked) {
                 context?.let { it ->
                     DatePickerDialog(
                         it, dateSetListener,
@@ -54,6 +55,9 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
                         cal.get(Calendar.DAY_OF_MONTH)
                     ).show()
                 }
+            } else {
+                binding.tvDeadlineDate.text = ""
+            }
         }
     }
 
@@ -75,6 +79,7 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
 
     private fun initToDo(toDoItemEdit: ToDoItem?) {
         if (toDoItemEdit != null) {
+            if (toDoItemEdit.deadline != null) binding.swDatePicker.isChecked = true
             binding.etToDo.setText(args.toDoItem?.text ?: "")
             when (toDoItemEdit.importance) {
                 Importance.LOW -> binding.spImportance.setSelection(0)
@@ -98,22 +103,27 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
     }
 
     private fun saveToDoItem(toDoItem: ToDoItem) {
-
         if (!editFlag) {
-             vm.addToDoItemApi(toDoItem)
+            vm.addToDoItemApi(toDoItem)
         } else {
-         toDoItem.id?.let { vm.refreshToDoItem(it, createToDoItem(toDoItem)) }
+            toDoItem.id?.let { vm.refreshToDoItem(it, createToDoItem(toDoItem)) }
         }
 
     }
-
 
     private fun createToDoItem(toDoItemEdit: ToDoItem?): ToDoItem {
         val text = binding.etToDo.text.toString()
         val importance = binding.spImportance.selectedItemPosition
         val toDoItemId = toDoItemEdit?.id
         val toDoItemCreatedAt = toDoItemEdit?.createdAt
-        return vm.createToDoItem(editFlag, text, importance, toDoItemId, toDoItemCreatedAt)
+        val toDoItemDeadline = binding.tvDeadlineDate.text.toString()
+        return vm.createToDoItem(
+            editFlag,
+            text,
+            importance,
+            toDoItemId,
+            toDoItemCreatedAt,
+            toDoItemDeadline
+        )
     }
 }
-

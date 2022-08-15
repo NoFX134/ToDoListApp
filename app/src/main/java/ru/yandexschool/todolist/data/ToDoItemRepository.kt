@@ -1,42 +1,51 @@
 package ru.yandexschool.todolist.data
 
-import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.yandexschool.todolist.data.mapper.Mapper
+import ru.yandexschool.todolist.data.mapper.DataClassMapper
 import ru.yandexschool.todolist.data.model.ToDoItem
+import ru.yandexschool.todolist.data.remote.Api
 import ru.yandexschool.todolist.data.remote.RetrofitInstance
-import ru.yandexschool.todolist.presentation.utils.Resource
+import ru.yandexschool.todolist.utils.ListRevisionStorage
+import ru.yandexschool.todolist.utils.ResponseState
 import java.util.*
 
-class ToDoItemRepository(context: Context, private val sharedPref: SharedPref) {
+/**
+ * A class for processing a data operation. To abstract the data layer from the rest of the application
+ */
 
-    private val mapper = Mapper(context)
+class ToDoItemRepository(
+    private val dataClassMapper: DataClassMapper,
+    private val listRevisionStorage: ListRevisionStorage,
+    private val api: Api
+) {
 
-
-    fun fetchToDoItem(): Flow<Resource<List<ToDoItem>>> {
+    suspend fun fetchToDoItem(): Flow<ResponseState<List<ToDoItem>>> {
         return flow {
             try {
-                val response = RetrofitInstance(sharedPref).api.fetchToDoItemList()
+                val response = api.fetchToDoItemList()
                 if (response.isSuccessful) {
                     response.body()?.let { resultResponse ->
-                        sharedPref.save(resultResponse.revision.toString())
-                        emit(Resource.Success(mapper.responseToDoToListItem(resultResponse)))
+                        listRevisionStorage.save(resultResponse.revision.toString())
+                        emit(ResponseState.Success(dataClassMapper.responseToDoToListItem(resultResponse)))
                     }
-                } else emit(Resource.Error(response.code()))
+                } else emit(ResponseState.Error(response.code()))
             } catch (e: Exception) {
-                emit(Resource.Error(-1))
+                emit(ResponseState.Error(-1))
             }
-
         }
     }
 
     suspend fun addTodoItem(toDoItem: ToDoItem) {
         try {
             val response =
-                RetrofitInstance(sharedPref).api.addToDoItem(mapper.toDoItemToPostToDo(toDoItem))
+                RetrofitInstance(listRevisionStorage).api.addToDoItem(
+                    dataClassMapper.toDoItemToPostToDo(
+                        toDoItem
+                    )
+                )
             if (response.isSuccessful) {
-                sharedPref.save(response.body()?.revision.toString())
+                listRevisionStorage.save(response.body()?.revision.toString())
             } else {
                 response.code()
             }
@@ -44,12 +53,12 @@ class ToDoItemRepository(context: Context, private val sharedPref: SharedPref) {
         }
     }
 
-
     suspend fun deleteTodoItem(toDoItemId: UUID) {
         try {
-            val response = RetrofitInstance(sharedPref).api.deleteToDoItem(toDoItemId.toString())
+            val response =
+                api.deleteToDoItem(toDoItemId.toString())
             if (response.isSuccessful) {
-                sharedPref.save(response.body()?.revision.toString())
+                listRevisionStorage.save(response.body()?.revision.toString())
             } else {
                 response.code()
             }
@@ -59,12 +68,12 @@ class ToDoItemRepository(context: Context, private val sharedPref: SharedPref) {
 
     suspend fun refreshToDoItem(toDoItemId: UUID, toDoItem: ToDoItem) {
         try {
-            val response = RetrofitInstance(sharedPref).api.refreshToDoItem(
+            val response = api.refreshToDoItem(
                 toDoItemId.toString(),
-                mapper.toDoItemToPostToDo(toDoItem)
+                dataClassMapper.toDoItemToPostToDo(toDoItem)
             )
             if (response.isSuccessful) {
-                sharedPref.save(response.body()?.revision.toString())
+                listRevisionStorage.save(response.body()?.revision.toString())
             } else {
                 response.code()
             }
@@ -72,11 +81,3 @@ class ToDoItemRepository(context: Context, private val sharedPref: SharedPref) {
         }
     }
 }
-
-
-
-
-
-
-
-

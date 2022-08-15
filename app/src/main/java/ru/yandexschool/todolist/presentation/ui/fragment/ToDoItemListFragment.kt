@@ -1,80 +1,76 @@
-package ru.yandexschool.todolist.presentation.ui
+package ru.yandexschool.todolist.presentation.ui.fragment
 
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.R
-import ru.yandexschool.todolist.data.UpdateWorker
-import ru.yandexschool.todolist.data.mapper.Mapper
+import ru.yandexschool.todolist.data.mapper.ErrorMapper
 import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
 import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
-import ru.yandexschool.todolist.presentation.utils.Resource
-import java.util.concurrent.TimeUnit
+import ru.yandexschool.todolist.presentation.ui.MainActivity
+import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModel
+import ru.yandexschool.todolist.utils.ResponseState
+
+/**
+ * Fragment for display list toDoItem
+ */
 
 class ToDoItemListFragment :
     BaseFragment<FragmentToDoItemListBinding>(FragmentToDoItemListBinding::inflate) {
 
-    private lateinit var vm: MainViewModel
+    private lateinit var vm: ToDoItemListViewModel
     private var toDoAdapter = ToDoItemListAdapter()
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        vm = (activity as MainActivity).vm
-        val connectivityManager =
-            getSystemService(requireContext(), ConnectivityManager::class.java)
-        initAdapter()
-        init()
-        initListeners()
-        startWorker()
-        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+    private val connectivityManager by lazy {
+        getSystemService(
+            requireContext(),
+            ConnectivityManager::class.java
+        )
+    }
+    private val networkCallback by lazy {
+        object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
                 vm.fetchToDoItem()
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        super.onViewCreated(view, savedInstanceState)
+        vm = (activity as MainActivity).vmList
+        initAdapter()
+        init()
+        initListeners()
         connectivityManager?.registerDefaultNetworkCallback(networkCallback)
     }
 
-    private fun startWorker() {
-        val request = PeriodicWorkRequestBuilder<UpdateWorker>(15, TimeUnit.MINUTES).build()
-        activity?.let {
-            WorkManager.getInstance(it.applicationContext).enqueueUniquePeriodicWork(
-                "ToDoItemUpdateWork",
-                ExistingPeriodicWorkPolicy.KEEP,
-                request
-            )
-        }
+    override fun onPause() {
+        super.onPause()
+        connectivityManager?.unregisterNetworkCallback(networkCallback)
     }
 
     private fun init() {
-
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.toDoItemListFlow.collect { resource ->
                     when (resource) {
-                        is Resource.Success -> {
+                        is ResponseState.Success -> {
                             toDoAdapter.submitList(resource.data)
                         }
-
-                        is Resource.Error -> {
+                        is ResponseState.Error -> {
                             showError(resource.message)
                         }
-
-                        is Resource.Loading -> showLoading()
+                        is ResponseState.Loading -> showLoading()
                     }
                 }
             }
@@ -91,11 +87,12 @@ class ToDoItemListFragment :
             bundle.apply {
                 putSerializable("toDoItem", null)
                 putSerializable("editFlag", false)
-                findNavController().navigate(
-                    R.id.action_toDoItemListFragment_to_toDoAddFragment,
-                    bundle
-                )
+
             }
+            findNavController().navigate(
+                R.id.action_toDoItemListFragment_to_toDoAddFragment,
+                bundle
+            )
         }
 
         toDoAdapter.setOnItemClickListener {
@@ -118,12 +115,13 @@ class ToDoItemListFragment :
         }
     }
 
-    private fun showError(message: Int?) {
+    private fun showError(message: Int) {
+        val errorMapper = ErrorMapper(requireContext())
         when (message) {
             -1, 404, 500 -> {
                 Snackbar.make(
                     requireView(),
-                    Mapper(requireContext()).errorMapper(message),
+                    errorMapper.errorMapper(message),
                     Snackbar.LENGTH_INDEFINITE
                 ).apply {
                     setAction(getString(R.string.refresh)) {
@@ -133,12 +131,9 @@ class ToDoItemListFragment :
             }
             else -> Snackbar.make(
                 requireView(),
-                Mapper(requireContext()).errorMapper(message),
+                errorMapper.errorMapper(message),
                 Snackbar.LENGTH_INDEFINITE
             ).show()
         }
     }
 }
-
-
-

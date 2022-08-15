@@ -1,8 +1,11 @@
 package ru.yandexschool.todolist.data.model
 
 import java.io.Serializable
-import java.time.LocalDate
 import java.util.*
+
+/**
+ * Model to work with the adapter and UI
+ */
 
 data class ToDoItem(
     val id: UUID?,
@@ -13,8 +16,6 @@ data class ToDoItem(
     val createdAt: Date? = Date(),
     val changedAt: Date
 ): Serializable
-
-
 
 enum class Importance {
     LOW,
