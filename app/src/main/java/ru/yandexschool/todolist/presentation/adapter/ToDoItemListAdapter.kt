@@ -35,4 +35,3 @@ class ToDoItemListAdapter @Inject constructor():
         getItem(position).let { holder.bind(it, onItemClickListener, checkBoxClickListener) }
     }
 }
-

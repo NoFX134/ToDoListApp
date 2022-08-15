@@ -13,8 +13,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import dagger.android.AndroidInjection
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.launch
-import ru.yandexschool.todolist.App
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.mapper.ErrorMapper
 import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
@@ -58,9 +59,9 @@ class ToDoItemListFragment :
     }
 
     override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
-        (context.applicationContext as App).appComponent.toDoItemListFragmentComponent().create()
-            .inject(this)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
