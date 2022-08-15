@@ -2,25 +2,26 @@ package ru.yandexschool.todolist
 
 import android.app.Application
 import androidx.work.*
-import ru.yandexschool.todolist.di.component.AppComponent
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
 import ru.yandexschool.todolist.di.component.DaggerAppComponent
 import ru.yandexschool.todolist.workers.UpdateWorker
 import ru.yandexschool.todolist.workers.UpdateWorkerFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class App : Application() {
+class App : Application(), HasAndroidInjector {
 
-    lateinit var appComponent: AppComponent
-        private set
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
     @Inject
     lateinit var updateWorkerFactory: UpdateWorkerFactory
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent.factory().create(this)
-        appComponent.inject(this)
+        DaggerAppComponent.factory().create(this).inject(this)
         initWorkManager()
         launchWorkManager()
     }
@@ -45,5 +46,8 @@ class App : Application() {
             request
         )
     }
-}
 
+    override fun androidInjector(): AndroidInjector<Any> {
+        return dispatchingAndroidInjector
+    }
+}

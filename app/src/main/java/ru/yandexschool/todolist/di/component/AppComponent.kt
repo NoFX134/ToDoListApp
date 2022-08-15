@@ -3,10 +3,9 @@ package ru.yandexschool.todolist.di.component
 import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjectionModule
 import ru.yandexschool.todolist.App
-import ru.yandexschool.todolist.di.module.ApiModule
-import ru.yandexschool.todolist.di.module.AppModule
-import ru.yandexschool.todolist.di.module.NetworkModule
+import ru.yandexschool.todolist.di.module.*
 import ru.yandexschool.todolist.di.scope.ApplicationScope
 import ru.yandexschool.todolist.presentation.ui.MainActivity
 
@@ -16,15 +15,15 @@ import ru.yandexschool.todolist.presentation.ui.MainActivity
         AppModule::class,
         NetworkModule::class,
         ApiModule::class,
-        AppSubcomponents::class
+        AndroidInjectionModule::class,
+        FragmentModule::class,
+        MainActivityModule::class
     ]
 )
 @ApplicationScope
 interface AppComponent {
 
     fun inject(app: App)
-    fun toDoItemListFragmentComponent(): ToDoItemListFragmentComponent.Factory
-    fun toDoAddFragmentComponent(): ToDoAddFragmentComponent.Factory
 
     @Component.Factory
     interface Factory {

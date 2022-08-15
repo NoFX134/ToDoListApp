@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import dagger.android.AndroidInjection
+import dagger.android.support.AndroidSupportInjection
 import ru.yandexschool.todolist.App
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.Importance
@@ -23,7 +25,7 @@ import javax.inject.Inject
  * Fragment for detailed display, editing, deleting ToDoItem
  */
 
-class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBinding::inflate) {
+class ToDoAddFragment() : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBinding::inflate) {
 
     private val args: ToDoAddFragmentArgs by navArgs()
     private var editFlag = false
@@ -33,12 +35,13 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
     lateinit var factory: ToDoAddViewModelFactory.Factory
 
     override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
-        (requireActivity().application as App).appComponent.toDoAddFragmentComponent().create()
-            .inject(this)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
         val toDoItemEdit = args.toDoItem
         editFlag = args.editFlag

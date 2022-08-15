@@ -5,9 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
-import ru.yandexschool.todolist.data.mapper.ErrorMapper
 import ru.yandexschool.todolist.di.scope.ApplicationScope
-import javax.inject.Singleton
 
 @Module
 class AppModule {
