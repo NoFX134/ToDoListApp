@@ -1,14 +1,12 @@
 package ru.yandexschool.todolist.workers
 
 import android.content.Context
-import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.yandexschool.todolist.data.ToDoItemRepository
-import ru.yandexschool.todolist.di.scope.ApplicationScope
 
 
 class UpdateWorker @AssistedInject constructor(

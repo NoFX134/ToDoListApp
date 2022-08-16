@@ -6,6 +6,7 @@ import dagger.Component
 import ru.yandexschool.todolist.App
 import ru.yandexschool.todolist.di.module.ApiModule
 import ru.yandexschool.todolist.di.module.AppModule
+import ru.yandexschool.todolist.di.module.DatabaseModule
 import ru.yandexschool.todolist.di.module.NetworkModule
 import ru.yandexschool.todolist.di.scope.ApplicationScope
 import ru.yandexschool.todolist.presentation.ui.MainActivity
@@ -16,6 +17,7 @@ import ru.yandexschool.todolist.presentation.ui.MainActivity
         AppModule::class,
         NetworkModule::class,
         ApiModule::class,
+        DatabaseModule::class,
         AppSubcomponents::class
     ]
 )
