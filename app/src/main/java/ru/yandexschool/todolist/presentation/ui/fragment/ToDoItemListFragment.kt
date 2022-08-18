@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -52,7 +53,7 @@ class ToDoItemListFragment :
         object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                vm.fetchToDoItem()
+                init()
             }
         }
     }
@@ -80,20 +81,13 @@ class ToDoItemListFragment :
     private fun init() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vm.toDoItemListFlow.collect { resource ->
-                    when (resource) {
-                        is ResponseState.Success -> toDoAdapter.submitList(resource.data)
-                        is ResponseState.Error -> showError(resource.message)
-                        is ResponseState.Loading -> showLoading()
+                vm.toDoItemListFlow.collect { toDoItemList ->
+                   toDoAdapter.submitList(toDoItemList)
+
                     }
                 }
             }
         }
-    }
-
-    private fun showLoading() {
-
-    }
 
     private fun initListeners() {
         binding.fab.setOnClickListener {
@@ -102,6 +96,7 @@ class ToDoItemListFragment :
                 putSerializable("toDoItem", null)
                 putSerializable("editFlag", false)
             }
+            Toast.makeText(requireContext(), "AAAAAAAAAA", Toast.LENGTH_SHORT).show()
             findNavController().navigate(
                 R.id.action_toDoItemListFragment_to_toDoAddFragment,
                 bundle

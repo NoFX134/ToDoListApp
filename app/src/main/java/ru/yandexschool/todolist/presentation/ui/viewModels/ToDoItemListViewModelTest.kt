@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.data.ToDoItemRepository
-import ru.yandexschool.todolist.data.ToDoItemRepositoryTest
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.di.scope.FragmentScope
 import ru.yandexschool.todolist.utils.ResponseState
@@ -22,15 +21,12 @@ import javax.inject.Inject
  */
 
 @FragmentScope
-class ToDoItemListViewModel @Inject constructor(
-    private val toDoItemRepository: ToDoItemRepository,
-    private val toDoItemRepositoryTest: ToDoItemRepositoryTest
-) :
+class ToDoItemListViewModelTest @Inject constructor(private val toDoItemRepository: ToDoItemRepository) :
     ViewModel() {
 
-    private val _toDoItemListFlow: MutableStateFlow<List<ToDoItem>> =
-        MutableStateFlow(emptyList())
-    val toDoItemListFlow: StateFlow<List<ToDoItem>> = _toDoItemListFlow
+    private val _toDoItemListFlow: MutableStateFlow<ResponseState<List<ToDoItem>>> =
+        MutableStateFlow(ResponseState.Loading())
+    val toDoItemListFlow: StateFlow<ResponseState<List<ToDoItem>>> = _toDoItemListFlow
 
     init {
         fetchToDoItem()
@@ -38,9 +34,10 @@ class ToDoItemListViewModel @Inject constructor(
 
     fun fetchToDoItem() {
         viewModelScope.launch(Dispatchers.IO) {
-            toDoItemRepositoryTest.fetchItem()
-                .collect { toDoItem ->
-                    _toDoItemListFlow.value = toDoItem
+            _toDoItemListFlow.value = ResponseState.Loading()
+            toDoItemRepository.fetchToDoItem()
+                .collect { resource ->
+                    _toDoItemListFlow.value = resource
                 }
         }
     }
@@ -50,5 +47,6 @@ class ToDoItemListViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             toDoItem.id.let { toDoItemRepository.refreshToDoItem(it, toDoItemNew) }
         }
+
     }
 }

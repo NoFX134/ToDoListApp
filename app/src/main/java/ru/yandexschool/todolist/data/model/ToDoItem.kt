@@ -8,7 +8,7 @@ import java.util.*
  */
 
 data class ToDoItem(
-    val id: UUID?,
+    val id: UUID,
     val text: String,
     val importance: Importance = Importance.BASIC,
     val deadline: Date? = null,

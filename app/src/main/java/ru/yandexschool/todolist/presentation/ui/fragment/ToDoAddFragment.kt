@@ -83,7 +83,7 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         }
         binding.tvDelete.setOnClickListener {
             if (toDoItemEdit != null) {
-                toDoItemEdit.id?.let { id -> vm.deleteToDoItem(id) }
+               vm.deleteToDoItem(toDoItemEdit)
             }
             findNavController().popBackStack()
         }
@@ -118,9 +118,8 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         if (!editFlag) {
             vm.addToDoItemApi(toDoItem)
         } else {
-            toDoItem.id?.let { vm.refreshToDoItem(it, createToDoItem(toDoItem)) }
+            toDoItem.let { vm.refreshToDoItem(createToDoItem(toDoItem)) }
         }
-
     }
 
     private fun createToDoItem(toDoItemEdit: ToDoItem?): ToDoItem {

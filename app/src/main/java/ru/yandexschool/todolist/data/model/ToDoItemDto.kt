@@ -16,10 +16,10 @@ data class ToDoItemDto(
     val id: UUID,
     val text: String?,
     val importance: ImportanceDto = ImportanceDto.BASIC,
-    val deadline: Date? = null,
+    val deadline: Date?,
     val done: Boolean? = false,
     @ColumnInfo(name = "created_at")
-    val createdAt: Date = Date(),
+    val createdAt: Date?,
     @ColumnInfo(name = "changed_at")
     val changedAt: Date?
 ): Serializable

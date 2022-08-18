@@ -1,8 +1,8 @@
 package ru.yandexschool.todolist.data
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import ru.yandexschool.todolist.data.local.ToDoItemDao
 import ru.yandexschool.todolist.data.mapper.DataClassMapper
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.data.remote.Api
@@ -19,8 +19,11 @@ import javax.inject.Inject
 class ToDoItemRepository @Inject constructor(
     private val dataClassMapper: DataClassMapper,
     private val listRevisionStorage: ListRevisionStorage,
-    private val api: Api
+    private val api: Api,
+    private val toDoItemDao: ToDoItemDao
 ) {
+
+
 
     suspend fun fetchToDoItem(): Flow<ResponseState<List<ToDoItem>>> {
         return flow {
@@ -29,7 +32,18 @@ class ToDoItemRepository @Inject constructor(
                 if (response.isSuccessful) {
                     response.body()?.let { resultResponse ->
                         listRevisionStorage.save(resultResponse.revision.toString())
-                        emit(ResponseState.Success(dataClassMapper.responseToDoToListItem(resultResponse)))
+                        toDoItemDao.insertToDoItemList(
+                            dataClassMapper.responseToDoListToDoItemDto(
+                                resultResponse
+                            )
+                        )
+                        emit(
+                            ResponseState.Success(
+                                dataClassMapper.responseToDoIntoListToDoItem(
+                                    resultResponse
+                                )
+                            )
+                        )
                     }
                 } else emit(ResponseState.Error(response.code()))
             } catch (e: Exception) {
@@ -41,7 +55,7 @@ class ToDoItemRepository @Inject constructor(
     suspend fun addTodoItem(toDoItem: ToDoItem) {
         try {
             val response =
-               api.addToDoItem(
+                api.addToDoItem(
                     dataClassMapper.toDoItemToPostToDo(
                         toDoItem
                     )

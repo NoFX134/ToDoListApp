@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.yandexschool.todolist.data.ToDoItemRepository
+import ru.yandexschool.todolist.data.ToDoItemRepositoryTest
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.di.scope.FragmentScope
@@ -17,25 +18,28 @@ import javax.inject.Inject
  */
 
 @FragmentScope
-class ToDoAddViewModel @Inject constructor(private val toDoItemRepository: ToDoItemRepository) :
+class ToDoAddViewModel @Inject constructor(
+    private val toDoItemRepository: ToDoItemRepository,
+    private val toDoItemRepositoryTest: ToDoItemRepositoryTest
+) :
     ViewModel() {
 
     fun addToDoItemApi(toDoItem: ToDoItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            toDoItemRepository.addTodoItem(toDoItem)
+            toDoItemRepositoryTest.addItem(toDoItem)
         }
     }
 
-    fun deleteToDoItem(toDoItemId: UUID) {
+    fun deleteToDoItem(toDoItem: ToDoItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            toDoItemRepository.deleteTodoItem(toDoItemId)
+            toDoItemRepositoryTest.deleteItem(toDoItem)
 
         }
     }
 
-    fun refreshToDoItem(toDoItemId: UUID, toDoItem: ToDoItem) {
+    fun refreshToDoItem(toDoItem: ToDoItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            toDoItemRepository.refreshToDoItem(toDoItemId, toDoItem)
+            toDoItemRepositoryTest.refreshItem(toDoItem)
         }
     }
 
@@ -61,7 +65,7 @@ class ToDoAddViewModel @Inject constructor(private val toDoItemRepository: ToDoI
             createdAt = Date(),
             changedAt = Date()
         ) else return ToDoItem(
-            id = toDoItemId,
+            id = toDoItemId?: UUID.randomUUID(),
             text = text,
             importance =
             when (importance) {

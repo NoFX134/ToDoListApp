@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.yandexschool.todolist.data.ToDoItemRepository
+import ru.yandexschool.todolist.data.ToDoItemRepositoryTest
 import ru.yandexschool.todolist.di.scope.FragmentScope
 
 /**
@@ -13,11 +14,12 @@ import ru.yandexschool.todolist.di.scope.FragmentScope
 
 @Suppress("UNCHECKED_CAST")
 class ToDoAddViewModelFactory @AssistedInject constructor(
-    private val toDoItemRepository: ToDoItemRepository
+    private val toDoItemRepository: ToDoItemRepository,
+    private val toDoItemRepositoryTest: ToDoItemRepositoryTest
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ToDoAddViewModel(toDoItemRepository) as T
+        return ToDoAddViewModel(toDoItemRepository, toDoItemRepositoryTest) as T
     }
 
     @FragmentScope
