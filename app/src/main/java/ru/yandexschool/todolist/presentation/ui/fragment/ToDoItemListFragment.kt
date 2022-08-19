@@ -52,7 +52,6 @@ class ToDoItemListFragment :
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
                 vm.updateItem()
-                init()
             }
         }
     }

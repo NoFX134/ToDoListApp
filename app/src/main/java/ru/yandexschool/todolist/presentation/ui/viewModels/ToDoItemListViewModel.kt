@@ -55,6 +55,7 @@ class ToDoItemListViewModel @Inject constructor(
     fun updateItem(){
         viewModelScope.launch(Dispatchers.IO) {
             toDoItemRepositoryTest.updateItem()
+            fetchToDoItem()
         }
     }
 }
