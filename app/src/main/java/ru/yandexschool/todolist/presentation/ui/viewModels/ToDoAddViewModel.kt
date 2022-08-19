@@ -2,8 +2,7 @@ package ru.yandexschool.todolist.presentation.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import ru.yandexschool.todolist.data.ToDoItemRepository
 import ru.yandexschool.todolist.data.ToDoItemRepositoryTest
 import ru.yandexschool.todolist.data.model.Importance
@@ -23,22 +22,23 @@ class ToDoAddViewModel @Inject constructor(
     private val toDoItemRepositoryTest: ToDoItemRepositoryTest
 ) :
     ViewModel() {
+    private val apiScope = CoroutineScope(Dispatchers.IO)
 
     fun addToDoItemApi(toDoItem: ToDoItem) {
-        viewModelScope.launch(Dispatchers.IO) {
+       apiScope.launch {
             toDoItemRepositoryTest.addItem(toDoItem)
         }
     }
 
     fun deleteToDoItem(toDoItem: ToDoItem) {
-        viewModelScope.launch(Dispatchers.IO) {
+        apiScope.launch {
             toDoItemRepositoryTest.deleteItem(toDoItem)
 
         }
     }
 
     fun refreshToDoItem(toDoItem: ToDoItem) {
-        viewModelScope.launch(Dispatchers.IO) {
+       apiScope.launch {
             toDoItemRepositoryTest.refreshItem(toDoItem)
         }
     }
@@ -65,7 +65,7 @@ class ToDoAddViewModel @Inject constructor(
             createdAt = Date(),
             changedAt = Date()
         ) else return ToDoItem(
-            id = toDoItemId?: UUID.randomUUID(),
+            id = toDoItemId ?: UUID.randomUUID(),
             text = text,
             importance =
             when (importance) {

@@ -48,7 +48,7 @@ class ToDoItemListViewModel @Inject constructor(
     fun setDone(toDoItem: ToDoItem, done: Boolean) {
         val toDoItemNew = toDoItem.copy(done = done)
         viewModelScope.launch(Dispatchers.IO) {
-            toDoItem.id.let { toDoItemRepository.refreshToDoItem(it, toDoItemNew) }
+          toDoItemRepositoryTest.refreshItem(toDoItemNew)
         }
     }
 

@@ -5,7 +5,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -22,7 +21,6 @@ import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
 import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModel
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModelFactory
-import ru.yandexschool.todolist.utils.ResponseState
 import javax.inject.Inject
 
 /**
@@ -53,7 +51,8 @@ class ToDoItemListFragment :
         object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                //init()
+                vm.updateItem()
+                init()
             }
         }
     }
@@ -82,12 +81,12 @@ class ToDoItemListFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.toDoItemListFlow.collect { toDoItemList ->
-                   toDoAdapter.submitList(toDoItemList)
+                    toDoAdapter.submitList(toDoItemList)
 
-                    }
                 }
             }
         }
+    }
 
     private fun initListeners() {
         binding.fab.setOnClickListener {
@@ -103,7 +102,6 @@ class ToDoItemListFragment :
         }
 
         toDoAdapter.setOnItemClickListener {
-          // vm.updateItem()
             val bundle = Bundle()
             bundle.apply {
                 putSerializable("toDoItem", it)
@@ -114,8 +112,8 @@ class ToDoItemListFragment :
                 bundle
             )
         }
-        toDoAdapter.checkBoxClickListener {toDoItem, done ->
-           vm.setDone(toDoItem,done)
+        toDoAdapter.checkBoxClickListener { toDoItem, done ->
+            vm.setDone(toDoItem, done)
         }
     }
 

@@ -63,8 +63,8 @@ class ToDoItemRepositoryTest @Inject constructor(
         val mergedList = listTodoItemApi as MutableList<ToDoItemDto>
         listToDoItemDto.forEach {toDoItemDto ->
             if (!listTodoItemApi.contains(toDoItemDto)) mergedList.add(toDoItemDto)
+            updateTodoItemApi(mergedList)
         }
-        api.updateToDoItem(dataClassMapper.listToDoItemDtoIntoResponseToDo(mergedList))
     }
 
     private suspend fun fetchItemToApi(): List<ListItem> {
@@ -117,6 +117,19 @@ class ToDoItemRepositoryTest @Inject constructor(
     private suspend fun deleteTodoItemApi(toDoItemId: UUID) {
         try {
             val response = api.deleteToDoItem(toDoItemId.toString())
+            if (response.isSuccessful) {
+                listRevisionStorage.save(response.body()?.revision.toString())
+            } else {
+                _error.postValue(response.code())
+            }
+        } catch (e: Exception) {
+            _error.postValue(-1)
+        }
+    }
+
+    private suspend fun updateTodoItemApi(list: List<ToDoItemDto>) {
+        try {
+            val response =  api.updateToDoItem(dataClassMapper.listToDoItemDtoIntoResponseToDo(list))
             if (response.isSuccessful) {
                 listRevisionStorage.save(response.body()?.revision.toString())
             } else {
