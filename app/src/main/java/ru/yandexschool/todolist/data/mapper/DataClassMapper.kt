@@ -15,7 +15,7 @@ import javax.inject.Inject
 class DataClassMapper @Inject constructor(private var application: Application) {
 
     @SuppressLint("HardwareIds")
-    private val id =
+    private val deviceId =
         Settings.Secure.getString(application.contentResolver, Settings.Secure.ANDROID_ID)
 
     fun responseToDoIntoListToDoItem(remote: ResponseToDo): MutableList<ToDoItem> {
@@ -51,7 +51,7 @@ class DataClassMapper @Inject constructor(private var application: Application) 
                 done = toDoItem.done,
                 createdAt = toDoItem.createdAt?.time ?: 0,
                 changedAt = toDoItem.changedAt?.time,
-                lastUpdatedBy = id
+                lastUpdatedBy = deviceId
             ),
             status = application.getString(R.string.Ok)
         )
@@ -137,6 +137,7 @@ class DataClassMapper @Inject constructor(private var application: Application) 
             done = toDoItemDto.done ?: false,
             createdAt = toDoItemDto.createdAt?.time,
             changedAt = toDoItemDto.changedAt?.time,
+            lastUpdatedBy = deviceId
         )
     }
 }

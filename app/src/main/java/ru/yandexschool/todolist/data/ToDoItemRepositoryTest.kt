@@ -5,15 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import okio.IOException
 import ru.yandexschool.todolist.data.local.ToDoItemDao
 import ru.yandexschool.todolist.data.mapper.DataClassMapper
 import ru.yandexschool.todolist.data.model.ListItem
-import ru.yandexschool.todolist.data.model.ResponseToDo
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.data.model.ToDoItemDto
 import ru.yandexschool.todolist.data.remote.Api
 import ru.yandexschool.todolist.di.scope.ApplicationScope
 import ru.yandexschool.todolist.utils.ListRevisionStorage
+import java.net.UnknownHostException
 import java.util.*
 import javax.inject.Inject
 
@@ -56,9 +57,14 @@ class ToDoItemRepositoryTest @Inject constructor(
         deleteTodoItemApi(toDoItem.id)
     }
 
-    suspend fun updateItem(responseToDo: ResponseToDo){
+    suspend fun updateItem(){
         val listToDoItemDto = toDoItemDao.getAllList()
-        api.updateToDoItem(dataClassMapper.listToDoItemDtoIntoResponseToDo(listToDoItemDto))
+        val listTodoItemApi = fetchItemToApi().map { dataClassMapper.listItemIntoToDoItemDto(it) }
+        val mergedList = listTodoItemApi as MutableList<ToDoItemDto>
+        listToDoItemDto.forEach {toDoItemDto ->
+            if (!listTodoItemApi.contains(toDoItemDto)) mergedList.add(toDoItemDto)
+        }
+        api.updateToDoItem(dataClassMapper.listToDoItemDtoIntoResponseToDo(mergedList))
     }
 
     private suspend fun fetchItemToApi(): List<ListItem> {
@@ -83,11 +89,11 @@ class ToDoItemRepositoryTest @Inject constructor(
             if (response.isSuccessful) {
                 listRevisionStorage.save(response.body()?.revision.toString())
             } else {
-                Log.e("REPO", response.code().toString())
                 _error.postValue(response.code())
 
             }
-        } catch (e: Exception) {
+        } catch (e: UnknownHostException) {
+            e.localizedMessage?.let { Log.d("REPO", it) }
             _error.postValue(-1)
         }
     }
@@ -103,7 +109,7 @@ class ToDoItemRepositoryTest @Inject constructor(
             } else {
                 _error.postValue(response.code())
             }
-        } catch (e: Exception) {
+        } catch (e: UnknownHostException) {
             _error.postValue(-1)
         }
     }

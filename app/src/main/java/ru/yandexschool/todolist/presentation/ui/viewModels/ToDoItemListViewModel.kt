@@ -51,4 +51,10 @@ class ToDoItemListViewModel @Inject constructor(
             toDoItem.id.let { toDoItemRepository.refreshToDoItem(it, toDoItemNew) }
         }
     }
+
+    fun updateItem(){
+        viewModelScope.launch(Dispatchers.IO) {
+            toDoItemRepositoryTest.updateItem()
+        }
+    }
 }

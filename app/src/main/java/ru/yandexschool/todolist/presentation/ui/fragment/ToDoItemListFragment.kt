@@ -53,7 +53,7 @@ class ToDoItemListFragment :
         object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                init()
+                //init()
             }
         }
     }
@@ -96,7 +96,6 @@ class ToDoItemListFragment :
                 putSerializable("toDoItem", null)
                 putSerializable("editFlag", false)
             }
-            Toast.makeText(requireContext(), "AAAAAAAAAA", Toast.LENGTH_SHORT).show()
             findNavController().navigate(
                 R.id.action_toDoItemListFragment_to_toDoAddFragment,
                 bundle
@@ -104,6 +103,7 @@ class ToDoItemListFragment :
         }
 
         toDoAdapter.setOnItemClickListener {
+          // vm.updateItem()
             val bundle = Bundle()
             bundle.apply {
                 putSerializable("toDoItem", it)
