@@ -17,7 +17,7 @@ class UpdateWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         try {
-            repository.fetchToDoItem()
+            repository.updateItem()
             return Result.success()
         } catch (e: Exception) {
             return Result.failure()

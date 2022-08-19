@@ -1,10 +1,8 @@
 package ru.yandexschool.todolist.presentation.ui.viewModels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import ru.yandexschool.todolist.data.ToDoItemRepository
-import ru.yandexschool.todolist.data.ToDoItemRepositoryTest
 import ru.yandexschool.todolist.data.model.Importance
 import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.di.scope.FragmentScope
@@ -19,27 +17,26 @@ import javax.inject.Inject
 @FragmentScope
 class ToDoAddViewModel @Inject constructor(
     private val toDoItemRepository: ToDoItemRepository,
-    private val toDoItemRepositoryTest: ToDoItemRepositoryTest
 ) :
     ViewModel() {
     private val apiScope = CoroutineScope(Dispatchers.IO)
 
     fun addToDoItemApi(toDoItem: ToDoItem) {
        apiScope.launch {
-            toDoItemRepositoryTest.addItem(toDoItem)
+            toDoItemRepository.addItem(toDoItem)
         }
     }
 
     fun deleteToDoItem(toDoItem: ToDoItem) {
         apiScope.launch {
-            toDoItemRepositoryTest.deleteItem(toDoItem)
+            toDoItemRepository.deleteItem(toDoItem)
 
         }
     }
 
     fun refreshToDoItem(toDoItem: ToDoItem) {
        apiScope.launch {
-            toDoItemRepositoryTest.refreshItem(toDoItem)
+            toDoItemRepository.refreshItem(toDoItem)
         }
     }
 
