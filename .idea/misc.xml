@@ -20,15 +20,16 @@
         <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/drawable/delete.xml" value="0.1" />
         <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/drawable/eye.xml" value="0.1" />
         <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/drawable/fab_add.xml" value="0.1" />
+        <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/drawable/ic_info_outline.xml" value="0.1205" />
         <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/drawable/info.xml" value="0.1" />
         <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/drawable/inset_delete.xml" value="0.1" />
         <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/drawable/inset_eye.xml" value="0.1" />
         <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/drawable/shape.xml" value="0.154" />
         <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/layout/activity_main.xml" value="0.1644021739130435" />
-        <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/layout/fragment_to_do_add.xml" value="0.22" />
-        <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/layout/fragment_to_do_item_list.xml" value="0.18344657195799877" />
-        <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/layout/to_do_cell.xml" value="0.67" />
+        <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/layout/fragment_to_do_add.xml" value="0.33" />
+        <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/layout/fragment_to_do_item_list.xml" value="0.1" />
+        <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/layout/to_do_cell.xml" value="0.9" />
         <entry key="..\:/Users/yuyukin/AndroidStudioProjects/ToDoListApp/app/src/main/res/layout/todo_toolbar.xml" value="0.1875" />
       </map>
     </option>
