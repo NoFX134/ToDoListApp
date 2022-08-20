@@ -103,14 +103,14 @@ class ToDoItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
                     }
                     tvToDoText.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                    tvToDoText.setTextColor(itemView.context.getColor(R.color.gray_light))
+                    tvToDoText.setTextColor(itemView.context.getColor(R.color.gray_light_d))
                 }
             }
 
             cbCheck.setOnCheckedChangeListener { _, b ->
                 if (b) {
                     tvToDoText.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                    tvToDoText.setTextColor(itemView.context.getColor(R.color.gray_light))
+                    tvToDoText.setTextColor(itemView.context.getColor(R.color.gray_light_d))
                 } else {
                     tvToDoText.paintFlags = 0
                     tvToDoText.setTextColor(itemView.context.getColor(R.color.black))
@@ -120,7 +120,7 @@ class ToDoItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             cbCheckRed.setOnCheckedChangeListener { _, b ->
                 if (b) {
                     tvToDoText.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                    tvToDoText.setTextColor(itemView.context.getColor(R.color.gray_light))
+                    tvToDoText.setTextColor(itemView.context.getColor(R.color.gray_light_d))
                 } else {
                     tvToDoText.paintFlags = 0
                     tvToDoText.setTextColor(itemView.context.getColor(R.color.black))

@@ -1,42 +1,46 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.appcompat.widget.Toolbar
 
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="141dp"
-        android:layout_margin="8dp"
-        android:layout_marginTop="188dp"
-        android:background="@color/back_light"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        android:background="?attr/colorPrimaryVariant"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:layout_marginStart="52dp"
-            android:layout_marginTop="59dp"
-            android:gravity="bottom"
-            android:text="@string/appName"
-            android:textColor="@color/black"
-            android:textSize="32sp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginStart="52dp"
-            android:layout_marginTop="6dp"
-            android:gravity="bottom"
-            android:padding="0dp"
-            android:text="@string/done"
-            android:textSize="16sp"
-            app:drawableRightCompat="@drawable/inset_eye" />
+            <TextView
+                android:id="@+id/app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="59dp"
+                android:gravity="bottom"
+                android:text="@string/appName"
+                android:textColor="@color/black"
+                android:textSize="32sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="6dp"
+                android:text="@string/done"
+                android:textSize="16sp"
+                app:drawableRightCompat="@drawable/inset_eye"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/app_name" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_to_do_recycler_view"
@@ -51,16 +55,13 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
+        style="@style/MyFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="@color/blue_light"
         android:contentDescription="@string/add_to_do"
-        android:src="@drawable/fab_add"
-        app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
