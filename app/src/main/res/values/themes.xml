@@ -11,9 +11,9 @@
         <!-- Additional brand color. -->
         <item name="colorTertiary">@color/black_4D</item>
         <item name="colorOnTertiary">@color/white</item>
-        <item name="colorError">@color/red_light</item>
-        <item name="colorAccent">@color/blue_light</item>
-        <item name="color">@color/green_light</item>
+        <item name="importantColor">@color/red_light</item>
+        <item name="colorBlue">@color/blue_light</item>
+        <item name="doneColor">@color/green_light</item>
         <item name="android:colorBackground">?attr/colorPrimaryVariant</item>
         <!-- Status bar color. -->
         <item name="android:windowLightStatusBar">true</item>
@@ -21,17 +21,18 @@
     </style>
 
     <style name="MyCheckBoxRed" parent="Theme.AppCompat.Light">
-        <item name="colorControlNormal">@color/red_light</item>
-        <item name="colorControlActivated">@color/green_light</item>
+        <item name="colorControlNormal">?attr/importantColor</item>
+        <item name="colorControlActivated">?attr/doneColor</item>
     </style>
 
     <style name="MyCheckBox" parent="Theme.AppCompat.Light">
-        <item name="colorControlNormal">@color/black_33</item>
-        <item name="colorControlActivated">@color/green_light</item>
+        <item name="colorControlNormal">?attr/colorTertiary</item>
+        <item name="colorControlActivated">?attr/doneColor</item>
     </style>
 
     <style name="MyFab" parent="Theme.AppCompat.Light">
         <item name="android:src">@drawable/fab_add</item>
+        <item name="backgroundTint">?attr/colorBlue</item>
         <item name="fabSize">normal</item>
     </style>
 

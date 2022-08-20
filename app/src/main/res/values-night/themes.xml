@@ -11,23 +11,22 @@
         <!-- Additional brand color. -->
         <item name="colorTertiary">@color/white_66</item>
         <item name="colorOnTertiary">@color/back_dark_s</item>
-        <item name="colorError">@color/red_dark</item>
-        <item name="colorAccent">@color/blue_dark</item>
-        <item name="color">@color/green_dark</item>
+        <item name="importantColor">@color/red_dark</item>
+        <item name="colorBlue">@color/blue_dark</item>
+        <item name="doneColor">@color/green_dark</item>
         <item name="android:colorBackground">?attr/colorPrimaryVariant</item>
         <!-- Status bar color. -->
-        <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 
     <style name="MyCheckBoxRed" parent="Theme.AppCompat.Light">
-        <item name="colorControlNormal">?attr/colorError</item>
-        <item name="colorControlActivated">?attr/color</item>
+        <item name="colorControlNormal">?attr/importantColor</item>
+        <item name="colorControlActivated">?attr/doneColor</item>
     </style>
 
     <style name="MyCheckBox" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">?attr/colorTertiary</item>
-        <item name="colorControlActivated">?attr/color</item>
+        <item name="colorControlActivated">?attr/doneColor</item>
     </style>
 
     <style name="MyFab" parent="Theme.AppCompat.Light">
