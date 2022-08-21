@@ -1,5 +1,6 @@
 package ru.yandexschool.todolist.data.local
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import ru.yandexschool.todolist.data.model.ToDoItemDto
@@ -31,5 +32,8 @@ interface ToDoItemDao {
 
     @Query("DELETE FROM table_todo_item WHERE id NOT IN (:idList)")
     suspend fun deleteOldToDoItem(idList: List<UUID>)
+
+    @Query("SELECT COUNT(*) FROM table_todo_item")
+    fun getCount(): LiveData<Int>
 
 }

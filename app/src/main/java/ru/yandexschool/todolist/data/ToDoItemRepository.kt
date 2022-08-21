@@ -56,14 +56,18 @@ class ToDoItemRepository @Inject constructor(
         deleteTodoItemApi(toDoItem.id)
     }
 
-    suspend fun updateItem(){
+    suspend fun updateItem() {
         val listToDoItemDto = toDoItemDao.getAllList()
         val listTodoItemApi = fetchItemToApi().map { dataClassMapper.listItemIntoToDoItemDto(it) }
         val mergedList = listTodoItemApi as MutableList<ToDoItemDto>
-        listToDoItemDto.forEach {toDoItemDto ->
+        listToDoItemDto.forEach { toDoItemDto ->
             if (!listTodoItemApi.contains(toDoItemDto)) mergedList.add(toDoItemDto)
             updateTodoItemApi(mergedList)
         }
+    }
+
+    fun getCount(): LiveData<Int> {
+        return toDoItemDao.getCount()
     }
 
     private suspend fun fetchItemToApi(): List<ListItem> {
@@ -128,7 +132,7 @@ class ToDoItemRepository @Inject constructor(
 
     private suspend fun updateTodoItemApi(list: List<ToDoItemDto>) {
         try {
-            val response =  api.updateToDoItem(dataClassMapper.listToDoItemDtoIntoResponseToDo(list))
+            val response = api.updateToDoItem(dataClassMapper.listToDoItemDtoIntoResponseToDo(list))
             if (response.isSuccessful) {
                 listRevisionStorage.save(response.body()?.revision.toString())
             } else {
