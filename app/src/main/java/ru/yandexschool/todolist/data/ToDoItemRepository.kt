@@ -13,6 +13,7 @@ import ru.yandexschool.todolist.data.model.ToDoItemDto
 import ru.yandexschool.todolist.data.remote.Api
 import ru.yandexschool.todolist.di.scope.ApplicationScope
 import ru.yandexschool.todolist.utils.ListRevisionStorage
+import ru.yandexschool.todolist.utils.UpdateTimeStorage
 import java.net.UnknownHostException
 import java.util.*
 import javax.inject.Inject
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class ToDoItemRepository @Inject constructor(
     private val dataClassMapper: DataClassMapper,
     private val listRevisionStorage: ListRevisionStorage,
+    private val updateTimeStorage: UpdateTimeStorage,
     private val api: Api,
     private val toDoItemDao: ToDoItemDao
 ) {
@@ -34,7 +36,7 @@ class ToDoItemRepository @Inject constructor(
     suspend fun fetchItem(): Flow<List<ToDoItem>> {
         val todoItemApi = fetchItemToApi().map { dataClassMapper.listItemIntoToDoItemDto(it) }
         val idList = todoItemApi.map { it.id }
-        if (fetchItemToApi().isNotEmpty()) {
+        if (todoItemApi.isNotEmpty()) {
             toDoItemDao.insertToDoItemList(todoItemApi)
             toDoItemDao.deleteOldToDoItem(idList)
         }
@@ -56,20 +58,37 @@ class ToDoItemRepository @Inject constructor(
         deleteTodoItemApi(toDoItem.id)
     }
 
-    suspend fun updateItem(){
-        val listToDoItemDto = toDoItemDao.getAllList()
+    suspend fun updateItem() {
+
+        var listOldItem = toDoItemDao.getOldItem(updateTimeStorage.get()) as MutableList
+        val listNewItem = toDoItemDao.getNewItem(updateTimeStorage.get())
         val listTodoItemApi = fetchItemToApi().map { dataClassMapper.listItemIntoToDoItemDto(it) }
+        listOldItem = deleteOldItem(listOldItem, listTodoItemApi)
+        val listToDoItemDto = listOldItem.plus(listNewItem)
         val mergedList = listTodoItemApi as MutableList<ToDoItemDto>
-        listToDoItemDto.forEach {toDoItemDto ->
+        listToDoItemDto.forEach { toDoItemDto ->
             if (!listTodoItemApi.contains(toDoItemDto)) mergedList.add(toDoItemDto)
-            updateTodoItemApi(mergedList)
         }
+        updateTodoItemApi(mergedList)
+    }
+
+    private fun deleteOldItem(listOldItem: MutableList<ToDoItemDto>, listTodoItemApi: List<ToDoItemDto>): MutableList<ToDoItemDto> {
+       val iterator = listOldItem.iterator()
+        while(iterator.hasNext()){
+            val item = iterator.next()
+            if(!listTodoItemApi.contains(item)){
+                iterator.remove()
+            }
+        }
+        return listOldItem
     }
 
     private suspend fun fetchItemToApi(): List<ListItem> {
         try {
             val response = api.fetchToDoItemList()
             if (response.isSuccessful) {
+                val updateTime = Date()
+                updateTimeStorage.save(updateTime.time)
                 listRevisionStorage.save(response.body()?.revision.toString())
                 return response.body()?.list ?: emptyList()
             } else {
@@ -128,7 +147,7 @@ class ToDoItemRepository @Inject constructor(
 
     private suspend fun updateTodoItemApi(list: List<ToDoItemDto>) {
         try {
-            val response =  api.updateToDoItem(dataClassMapper.listToDoItemDtoIntoResponseToDo(list))
+            val response = api.updateToDoItem(dataClassMapper.listToDoItemDtoIntoResponseToDo(list))
             if (response.isSuccessful) {
                 listRevisionStorage.save(response.body()?.revision.toString())
             } else {
