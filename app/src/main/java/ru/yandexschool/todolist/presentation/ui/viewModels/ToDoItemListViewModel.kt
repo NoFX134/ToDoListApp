@@ -25,7 +25,7 @@ class ToDoItemListViewModel @Inject constructor(
     private val _toDoItemListFlow: MutableStateFlow<List<ToDoItem>> =
         MutableStateFlow(emptyList())
     val toDoItemListFlow: StateFlow<List<ToDoItem>> = _toDoItemListFlow
-    val countLiveData = toDoItemRepository.getCount()
+    val countFlow = toDoItemRepository.getCount()
 
     init {
         fetchToDoItem()

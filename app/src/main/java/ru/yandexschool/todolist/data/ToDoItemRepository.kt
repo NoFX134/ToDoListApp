@@ -66,7 +66,7 @@ class ToDoItemRepository @Inject constructor(
         }
     }
 
-    fun getCount(): LiveData<Int> {
+    fun getCount(): Flow<Int> {
         return toDoItemDao.getCount()
     }
 

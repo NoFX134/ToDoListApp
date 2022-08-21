@@ -31,6 +31,7 @@
 
     <style name="MyFab" parent="Theme.AppCompat.Light">
         <item name="android:src">@drawable/fab_add</item>
+        <item name="backgroundTint">?attr/colorBlue</item>
         <item name="fabSize">normal</item>
     </style>
 

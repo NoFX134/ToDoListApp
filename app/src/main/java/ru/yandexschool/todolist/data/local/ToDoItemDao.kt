@@ -34,6 +34,6 @@ interface ToDoItemDao {
     suspend fun deleteOldToDoItem(idList: List<UUID>)
 
     @Query("SELECT COUNT(*) FROM table_todo_item")
-    fun getCount(): LiveData<Int>
+    fun getCount(): Flow<Int>
 
 }
