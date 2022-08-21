@@ -1,14 +1,15 @@
 package ru.yandexschool.todolist.presentation.ui.fragment
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import kotlinx.coroutines.delay
 import ru.yandexschool.todolist.App
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.Importance
@@ -49,6 +50,11 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         initCalendar()
     }
 
+    override fun onPause() {
+        super.onPause()
+        hideKeyBoard(requireActivity())
+    }
+
     private fun initCalendar() {
         val cal = Calendar.getInstance()
         val dateSetListener =
@@ -84,7 +90,7 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         }
         binding.tvDelete.setOnClickListener {
             if (toDoItemEdit != null) {
-               vm.deleteToDoItem(toDoItemEdit)
+                vm.deleteToDoItem(toDoItemEdit)
             }
             findNavController().popBackStack()
         }
@@ -138,4 +144,14 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
             toDoItemDeadline
         )
     }
+
+    private fun hideKeyBoard(activity: Activity) {
+        val inputManager: InputMethodManager =
+            activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.hideSoftInputFromWindow(
+            activity.currentFocus?.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS
+        )
+    }
+
 }
