@@ -11,6 +11,12 @@ interface ToDoItemDao {
     @Query("SELECT * FROM table_todo_item Order by created_at DESC")
     fun getAll(): Flow<List<ToDoItemDto>>
 
+    @Query("SELECT * FROM table_todo_item Where created_at<(:updateTime)")
+    fun getOldItem(updateTime: Long):List<ToDoItemDto>
+
+    @Query("SELECT * FROM table_todo_item Where created_at>=(:updateTime)")
+    fun getNewItem(updateTime: Long):List<ToDoItemDto>
+
     @Query("SELECT * FROM table_todo_item")
     fun getAllList():List<ToDoItemDto>
 
