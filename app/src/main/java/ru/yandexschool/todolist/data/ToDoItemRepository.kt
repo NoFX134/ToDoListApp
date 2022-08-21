@@ -173,4 +173,8 @@ class ToDoItemRepository @Inject constructor(
     private suspend fun deleteItemToDb(toDoItem: ToDoItem) {
         toDoItemDao.deleteToDoItem(dataClassMapper.toDoItemIntoToDoItemDto(toDoItem))
     }
+
+    fun getCount(): Flow<Int> {
+        return toDoItemDao.getCount()
+    }
 }
