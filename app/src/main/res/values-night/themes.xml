@@ -17,6 +17,19 @@
         <item name="android:colorBackground">?attr/colorPrimaryVariant</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- DataPicker color. -->
+        <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
+    </style>
+
+    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">?attr/colorBlue</item>
+        <item name="android:textColorPrimary">?attr/colorPrimary</item>
+        <item name="android:textColorSecondary">?attr/colorTertiary</item>
+        <item name="android:windowBackground">?attr/colorOnTertiary</item>
+    </style>
+
+    <style name="MySwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">?attr/colorBlue</item>
     </style>
 
     <style name="MyCheckBoxRed" parent="Theme.AppCompat.Light">
@@ -40,6 +53,7 @@
         <item name="android:layout_height">0.5dp</item>
         <item name="background">?attr/colorOnSecondary</item>
     </style>
+
     <style name="MySpinner" parent="Theme.AppCompat.Light">
         <item name="android:popupBackground">@color/back_dark_e</item>
     </style>
