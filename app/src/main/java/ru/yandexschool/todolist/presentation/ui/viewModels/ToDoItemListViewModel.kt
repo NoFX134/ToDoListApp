@@ -25,6 +25,7 @@ class ToDoItemListViewModel @Inject constructor(
     private val _toDoItemListFlow: MutableStateFlow<List<ToDoItem>> =
         MutableStateFlow(emptyList())
     val toDoItemListFlow: StateFlow<List<ToDoItem>> = _toDoItemListFlow
+    val countFlow = toDoItemRepository.getCount()
 
     init {
         fetchToDoItem()
@@ -42,14 +43,15 @@ class ToDoItemListViewModel @Inject constructor(
     fun setDone(toDoItem: ToDoItem, done: Boolean) {
         val toDoItemNew = toDoItem.copy(done = done)
         viewModelScope.launch(Dispatchers.IO) {
-          toDoItemRepository.refreshItem(toDoItemNew)
+            toDoItemRepository.refreshItem(toDoItemNew)
         }
     }
 
-    fun updateItem(){
+    fun updateItem() {
         viewModelScope.launch(Dispatchers.IO) {
             toDoItemRepository.updateItem()
             fetchToDoItem()
         }
     }
 }
+

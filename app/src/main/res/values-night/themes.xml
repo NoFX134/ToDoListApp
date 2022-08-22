@@ -1,16 +1,61 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
-    <style name="Theme.ToDoList" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.ToDoList" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/back_dark_p</item>
+        <item name="colorOnPrimary">@color/gray</item>
+        <item name="colorSecondary">@color/white_99</item>
+        <item name="colorSecondaryVariant">@color/white_26</item>
+        <item name="colorOnSecondary">@color/white_33</item>
+        <!-- Additional brand color. -->
+        <item name="colorTertiary">@color/white_66</item>
+        <item name="colorOnTertiary">@color/back_dark_s</item>
+        <item name="importantColor">@color/red_dark</item>
+        <item name="colorBlue">@color/blue_dark</item>
+        <item name="doneColor">@color/green_dark</item>
+        <item name="android:colorBackground">?attr/colorPrimaryVariant</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- DataPicker color. -->
+        <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
     </style>
+
+    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">?attr/colorBlue</item>
+        <item name="android:textColorPrimary">?attr/colorPrimary</item>
+        <item name="android:textColorSecondary">?attr/colorTertiary</item>
+        <item name="android:windowBackground">?attr/colorOnTertiary</item>
+    </style>
+
+    <style name="MySwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">?attr/colorBlue</item>
+    </style>
+
+    <style name="MyCheckBoxRed" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">?attr/importantColor</item>
+        <item name="colorControlActivated">?attr/doneColor</item>
+    </style>
+
+    <style name="MyCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">?attr/colorTertiary</item>
+        <item name="colorControlActivated">?attr/doneColor</item>
+    </style>
+
+    <style name="MyFab" parent="Theme.AppCompat.Light">
+        <item name="android:src">@drawable/fab_add</item>
+        <item name="backgroundTint">?attr/colorBlue</item>
+        <item name="fabSize">normal</item>
+    </style>
+
+    <style name="Separator" parent="Theme.AppCompat.Light">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="background">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="MySpinner" parent="Theme.AppCompat.Light">
+        <item name="android:popupBackground">@color/back_dark_e</item>
+    </style>
+
 </resources>

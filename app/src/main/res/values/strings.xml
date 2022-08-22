@@ -21,10 +21,31 @@
     <string name="Unknown_error">Неизвестная ошибка</string>
     <string name="refresh">Обновить</string>
     <string name="Ok">ok</string>
+    <string name="light_theme">Всегда светлая тема</string>
+    <string name="dark_theme">Всегда темная тема</string>
+    <string name="system_theme">Как в системе</string>
     <string-array name="importance_array">
         <item>Нет</item>
         <item>Низкий</item>
         <item>!!Высокий</item>
 
     </string-array>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="Settings">Настройки</string>
+    <string name="Title">Мои дела</string>
+    <string name="app_theme">Тема приложения</string>
+    <string name="dark_light_theme_settings">Настройка светлой/темной темы</string>
 </resources>

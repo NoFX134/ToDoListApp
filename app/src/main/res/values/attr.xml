@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="importantColor" format="reference|color"/>
+    <attr name="doneColor" format="reference|color"/>
+    <attr name="colorBlue" format="reference|color"/>
+</resources>
