@@ -24,4 +24,7 @@ interface Api {
 
     @PUT("list/{id}")
     suspend fun refreshToDoItem(@Path("id") toDoItemId: String, @Body toDoItem: PostToDo): Response<PostToDo>
+
+    @PATCH("list")
+    suspend fun updateToDoItem(@Body responseToDo: ResponseToDo): Response<ResponseToDo>
 }

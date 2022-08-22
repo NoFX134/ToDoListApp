@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import kotlinx.coroutines.delay
 import ru.yandexschool.todolist.App
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.model.Importance
@@ -83,7 +84,7 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         }
         binding.tvDelete.setOnClickListener {
             if (toDoItemEdit != null) {
-                toDoItemEdit.id?.let { id -> vm.deleteToDoItem(id) }
+               vm.deleteToDoItem(toDoItemEdit)
             }
             findNavController().popBackStack()
         }
@@ -118,9 +119,8 @@ class ToDoAddFragment : BaseFragment<FragmentToDoAddBinding>(FragmentToDoAddBind
         if (!editFlag) {
             vm.addToDoItemApi(toDoItem)
         } else {
-            toDoItem.id?.let { vm.refreshToDoItem(it, createToDoItem(toDoItem)) }
+            toDoItem.let { vm.refreshToDoItem(createToDoItem(toDoItem)) }
         }
-
     }
 
     private fun createToDoItem(toDoItemEdit: ToDoItem?): ToDoItem {

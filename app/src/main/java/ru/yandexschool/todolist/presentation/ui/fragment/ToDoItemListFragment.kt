@@ -21,7 +21,6 @@ import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
 import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModel
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModelFactory
-import ru.yandexschool.todolist.utils.ResponseState
 import javax.inject.Inject
 
 /**
@@ -52,7 +51,7 @@ class ToDoItemListFragment :
         object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                vm.fetchToDoItem()
+                vm.updateItem()
             }
         }
     }
@@ -80,19 +79,12 @@ class ToDoItemListFragment :
     private fun init() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vm.toDoItemListFlow.collect { resource ->
-                    when (resource) {
-                        is ResponseState.Success -> toDoAdapter.submitList(resource.data)
-                        is ResponseState.Error -> showError(resource.message)
-                        is ResponseState.Loading -> showLoading()
-                    }
+                vm.toDoItemListFlow.collect { toDoItemList ->
+                    toDoAdapter.submitList(toDoItemList)
+
                 }
             }
         }
-    }
-
-    private fun showLoading() {
-
     }
 
     private fun initListeners() {
@@ -119,8 +111,8 @@ class ToDoItemListFragment :
                 bundle
             )
         }
-        toDoAdapter.checkBoxClickListener {toDoItem, done ->
-           vm.setDone(toDoItem,done)
+        toDoAdapter.checkBoxClickListener { toDoItem, done ->
+            vm.setDone(toDoItem, done)
         }
     }
 

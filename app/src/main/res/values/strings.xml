@@ -20,6 +20,7 @@
     <string name="Error_500">Ошибка сервера</string>
     <string name="Unknown_error">Неизвестная ошибка</string>
     <string name="refresh">Обновить</string>
+    <string name="Ok">ok</string>
     <string-array name="importance_array">
         <item>Нет</item>
         <item>Низкий</item>
