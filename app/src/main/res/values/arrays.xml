@@ -1,0 +1,11 @@
+<resources>
+    <!-- Theme Preference -->
+    <string-array name="reply_entries">
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
+        <item>@string/system_theme</item>
+    </string-array>
+
+
+
+</resources>

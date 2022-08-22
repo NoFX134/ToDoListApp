@@ -17,6 +17,9 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_toDoItemListFragment_to_themeSettings"
+            app:destination="@id/themeSettings" />
     </fragment>
     <fragment
         android:id="@+id/toDoAddFragment"
@@ -32,4 +35,8 @@
             app:argType="boolean"
             android:defaultValue="false" />
     </fragment>
+    <fragment
+        android:id="@+id/themeSettings"
+        android:name="ru.yandexschool.todolist.presentation.ui.fragment.ThemeSettings"
+        android:label="ThemeSettings" />
 </navigation>

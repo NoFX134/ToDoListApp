@@ -8,6 +8,7 @@
         <item name="colorSecondary">@color/black_99</item>
         <item name="colorSecondaryVariant">@color/black_26</item>
         <item name="colorOnSecondary">@color/black_33</item>
+        <item name="colorAccent">@color/blue_light</item>
         <!-- Additional brand color. -->
         <item name="colorTertiary">@color/black_4D</item>
         <item name="colorOnTertiary">@color/white</item>
