@@ -18,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/colorPrimaryVariant"
-            app:expandedTitleTextAppearance="@android:color/transparent"
             android:fitsSystemWindows="true"
             app:expandedTitleGravity="top"
             app:expandedTitleMarginStart="60dp"
