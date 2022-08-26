@@ -1,5 +1,6 @@
 package ru.yandexschool.todolist.presentation.ui.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -51,6 +52,7 @@ class ToDoItemListViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             toDoItemRepository.updateItem()
             fetchToDoItem()
+            Log.e("update", "update!!!")
         }
     }
 }

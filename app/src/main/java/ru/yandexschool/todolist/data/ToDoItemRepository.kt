@@ -8,7 +8,6 @@ import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.data.model.ToDoItemDto
 import ru.yandexschool.todolist.data.remote.ToDoItemRemoteDataSource
 import ru.yandexschool.todolist.di.scope.ApplicationScope
-import ru.yandexschool.todolist.utils.UpdateTimeStorage
 import javax.inject.Inject
 
 /**
@@ -16,8 +15,6 @@ import javax.inject.Inject
  */
 @ApplicationScope
 class ToDoItemRepository @Inject constructor(
-    private val dataClassMapper: DataClassMapper,
-    private val updateTimeStorage: UpdateTimeStorage,
     private val toDoItemLocalDataSource: ToDoItemLocalDataSource,
     private val toDoItemRemoteDataSource: ToDoItemRemoteDataSource
 ) {
@@ -26,18 +23,17 @@ class ToDoItemRepository @Inject constructor(
 
     suspend fun fetchItem(): Flow<List<ToDoItem>> {
         val todoItemApi = toDoItemRemoteDataSource.fetchItemToApi()
-            .map { dataClassMapper.listItemIntoToDoItemDto(it) }
         val idList = todoItemApi.map { it.id }
         if (todoItemApi.isNotEmpty()) {
             toDoItemLocalDataSource.insertToDoItemList(todoItemApi)
             toDoItemLocalDataSource.deleteOldToDoItem(idList)
         }
         return toDoItemLocalDataSource.fetchItemToDb()
-            .map { dataClassMapper.listToDoItemDtoIntoListToDoItem(it) }
+
     }
 
     suspend fun addItem(toDoItem: ToDoItem) {
-        toDoItemLocalDataSource.addItemToDb(toDoItem)
+        toDoItemLocalDataSource.addToDoItemToDb(toDoItem)
         toDoItemRemoteDataSource.addTodoItemApi(toDoItem)
     }
 
@@ -52,11 +48,9 @@ class ToDoItemRepository @Inject constructor(
     }
 
     suspend fun updateItem() {
-
-        var listOldItem = toDoItemLocalDataSource.getOldItem(updateTimeStorage.get())
-        val listNewItem = toDoItemLocalDataSource.getNewItem(updateTimeStorage.get())
+        var listOldItem = toDoItemLocalDataSource.getOldItem()
+        val listNewItem = toDoItemLocalDataSource.getNewItem()
         val listTodoItemApi = toDoItemRemoteDataSource.fetchItemToApi()
-            .map { dataClassMapper.listItemIntoToDoItemDto(it) }
         listOldItem = deleteOldItem(listOldItem, listTodoItemApi)
         val listToDoItemDto = listOldItem.plus(listNewItem)
         val mergedList = listTodoItemApi as MutableList<ToDoItemDto>

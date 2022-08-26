@@ -26,14 +26,15 @@ class ToDoItemRemoteDataSource @Inject constructor(
     private val _error: MutableLiveData<Int> = MutableLiveData()
     val error: LiveData<Int> = _error
 
-    suspend fun fetchItemToApi(): List<ListItem> {
+    suspend fun fetchItemToApi(): List<ToDoItemDto> {
         try {
             val response = api.fetchToDoItemList()
             if (response.isSuccessful) {
                 val updateTime = Date()
                 updateTimeStorage.save(updateTime.time)
                 listRevisionStorage.save(response.body()?.revision.toString())
-                return response.body()?.list ?: emptyList()
+                return response.body()?.list?.map { dataClassMapper.listItemIntoToDoItemDto(it) }
+                    ?: emptyList()
             } else {
                 _error.postValue(response.code())
                 return emptyList()
