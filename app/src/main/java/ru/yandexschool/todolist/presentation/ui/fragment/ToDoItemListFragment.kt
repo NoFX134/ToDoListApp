@@ -11,10 +11,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -31,11 +29,9 @@ import ru.yandexschool.todolist.App
 import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.mapper.ErrorMapper
 import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
-
 import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModel
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModelFactory
-import java.util.prefs.Preferences
 import javax.inject.Inject
 
 /**
@@ -86,8 +82,6 @@ class ToDoItemListFragment :
         initToolbar()
         registerConnectivityManager()
         switchTheme()
-
-
     }
 
     private fun switchTheme() {

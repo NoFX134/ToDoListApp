@@ -31,7 +31,7 @@ class ToDoItemListViewModel @Inject constructor(
         fetchToDoItem()
     }
 
-    fun fetchToDoItem() {
+    private fun fetchToDoItem() {
         viewModelScope.launch(Dispatchers.IO) {
             toDoItemRepository.fetchItem()
                 .collect { toDoItem ->

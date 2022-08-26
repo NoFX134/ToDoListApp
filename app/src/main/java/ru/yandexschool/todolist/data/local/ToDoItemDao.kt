@@ -12,13 +12,13 @@ interface ToDoItemDao {
     fun getAll(): Flow<List<ToDoItemDto>>
 
     @Query("SELECT * FROM table_todo_item Where created_at<(:updateTime)")
-    fun getOldItem(updateTime: Long):List<ToDoItemDto>
+    suspend fun getOldItem(updateTime: Long):MutableList<ToDoItemDto>
 
     @Query("SELECT * FROM table_todo_item Where created_at>=(:updateTime)")
     fun getNewItem(updateTime: Long):List<ToDoItemDto>
 
     @Query("SELECT * FROM table_todo_item")
-    fun getAllList():List<ToDoItemDto>
+    suspend fun getAllList():List<ToDoItemDto>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertToDoItemList(todoItemList: List<ToDoItemDto>)
@@ -31,7 +31,6 @@ interface ToDoItemDao {
 
     @Update
     suspend fun updateToDoItemList(toDoItemDtoList: List<ToDoItemDto>)
-
 
     @Delete
     suspend fun deleteToDoItem(toDoItemDto: ToDoItemDto)
