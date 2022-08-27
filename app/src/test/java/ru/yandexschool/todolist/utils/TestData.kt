@@ -5,8 +5,7 @@ import ru.yandexschool.todolist.data.model.*
 import java.util.*
 
 
-internal object TestData {
-
+object TestData {
 
     val toDoItemTestOne = ToDoItem(
         id = UUID(1, 1),
@@ -18,7 +17,7 @@ internal object TestData {
         createdAt = Date(22224),
     )
 
-    val toDoItemTestTwo = ToDoItem(
+    private val toDoItemTestTwo = ToDoItem(
         id = UUID(1, 1),
         text = "test",
         importance = Importance.IMPORTANT,
@@ -28,11 +27,11 @@ internal object TestData {
         createdAt = Date(22224),
     )
 
-    val toDoItemTestList = listOf(
+    private val toDoItemTestList = listOf(
         toDoItemTestOne, toDoItemTestTwo
     )
 
-    val toDoItemDtoTest = ToDoItemDto(
+    private val toDoItemDtoTest = ToDoItemDto(
         id = UUID(1, 1),
         text = "test",
         importance = ImportanceDto.IMPORTANT,
@@ -54,14 +53,14 @@ internal object TestData {
         emit(toDoItemTestList)
     }
 
-    val listOldItemTest = mutableListOf<ToDoItemDto>(
+    val listOldItemTest = mutableListOf(
         ToDoItemDto(
             id = UUID(0, 0),
             importance = ImportanceDto.IMPORTANT,
             text = "",
             done = false,
             deadline = null,
-            createdAt = null,
+            createdAt = Date(0),
             changedAt = null
         ),
         ToDoItemDto(
@@ -70,7 +69,7 @@ internal object TestData {
             text = "",
             done = false,
             deadline = null,
-            createdAt = null,
+            createdAt = Date(1000),
             changedAt = null
         )
     )
@@ -81,7 +80,7 @@ internal object TestData {
             text = "",
             done = false,
             deadline = null,
-            createdAt = null,
+            createdAt = Date(2000),
             changedAt = null
         ),
         ToDoItemDto(
@@ -90,7 +89,7 @@ internal object TestData {
             text = "",
             done = false,
             deadline = null,
-            createdAt = null,
+            createdAt = Date(3000),
             changedAt = null
         )
     )
@@ -102,7 +101,7 @@ internal object TestData {
             text = "",
             done = false,
             deadline = null,
-            createdAt = null,
+            createdAt = Date(0),
             changedAt = null
         ),
         ToDoItemDto(
@@ -111,7 +110,7 @@ internal object TestData {
             text = "",
             done = false,
             deadline = null,
-            createdAt = null,
+            createdAt = Date(4000),
             changedAt = null
         )
     )
@@ -122,7 +121,7 @@ internal object TestData {
             text = "",
             done = false,
             deadline = null,
-            createdAt = null,
+            createdAt = Date(0),
             changedAt = null
         ), ToDoItemDto(
             id = UUID(0, 2),
@@ -130,7 +129,7 @@ internal object TestData {
             text = "",
             done = false,
             deadline = null,
-            createdAt = null,
+            createdAt = Date(2000),
             changedAt = null
         ),
         ToDoItemDto(
@@ -139,7 +138,7 @@ internal object TestData {
             text = "",
             done = false,
             deadline = null,
-            createdAt = null,
+            createdAt = Date(3000),
             changedAt = null
         ),
         ToDoItemDto(
@@ -148,7 +147,7 @@ internal object TestData {
             text = "",
             done = false,
             deadline = null,
-            createdAt = null,
+            createdAt= Date(4000),
             changedAt = null
         )
     )

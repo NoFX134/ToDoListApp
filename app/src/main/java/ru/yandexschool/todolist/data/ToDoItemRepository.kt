@@ -8,6 +8,7 @@ import ru.yandexschool.todolist.data.model.ToDoItem
 import ru.yandexschool.todolist.data.model.ToDoItemDto
 import ru.yandexschool.todolist.data.remote.ToDoItemRemoteDataSource
 import ru.yandexschool.todolist.di.scope.ApplicationScope
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -35,6 +36,7 @@ class ToDoItemRepository @Inject constructor(
     suspend fun addItem(toDoItem: ToDoItem) {
         toDoItemLocalDataSource.addToDoItemToDb(toDoItem)
         toDoItemRemoteDataSource.addTodoItemApi(toDoItem)
+
     }
 
     suspend fun refreshItem(toDoItem: ToDoItem) {
@@ -53,11 +55,11 @@ class ToDoItemRepository @Inject constructor(
         val listTodoItemApi = toDoItemRemoteDataSource.fetchItemToApi()
         listOldItem = deleteOldItem(listOldItem, listTodoItemApi)
         val listToDoItemDto = listOldItem.plus(listNewItem)
-        val mergedList = listTodoItemApi as MutableList<ToDoItemDto>
+        val mergedList = listTodoItemApi.toMutableList()
         listToDoItemDto.forEach { toDoItemDto ->
             if (!listTodoItemApi.contains(toDoItemDto)) mergedList.add(toDoItemDto)
         }
-        toDoItemRemoteDataSource.updateTodoItemApi(mergedList)
+        toDoItemRemoteDataSource.updateTodoItemApi(mergedList.sortedBy { it.createdAt })
     }
 
     fun getCount(): Flow<Int> {

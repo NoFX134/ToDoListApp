@@ -12,7 +12,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -30,6 +30,7 @@ import ru.yandexschool.todolist.R
 import ru.yandexschool.todolist.data.mapper.ErrorMapper
 import ru.yandexschool.todolist.databinding.FragmentToDoItemListBinding
 import ru.yandexschool.todolist.presentation.adapter.ToDoItemListAdapter
+import ru.yandexschool.todolist.presentation.ui.MainActivity
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModel
 import ru.yandexschool.todolist.presentation.ui.viewModels.ToDoItemListViewModelFactory
 import javax.inject.Inject
@@ -88,18 +89,17 @@ class ToDoItemListFragment :
         val preference = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val text = preference.getString("Theme", getString(R.string.system_theme))
         when (text) {
-            getString(R.string.system_theme) -> setTheme(
-                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            getString(R.string.light_theme) -> setTheme(
-                AppCompatDelegate.MODE_NIGHT_NO)
-            getString(R.string.dark_theme) -> setTheme(
-                AppCompatDelegate.MODE_NIGHT_YES)
+            getString(R.string.system_theme) -> setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
+            getString(R.string.light_theme) -> setDefaultNightMode(MODE_NIGHT_NO)
+            getString(R.string.dark_theme) -> setDefaultNightMode(MODE_NIGHT_YES)
         }
     }
 
     private fun initToolbar() {
         binding.toolbar.title = getString(R.string.Title)
-        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        if (activity is MainActivity) {
+            (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        }
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -205,6 +205,6 @@ class ToDoItemListFragment :
     }
 
     private fun setTheme(themeMode: Int) {
-        AppCompatDelegate.setDefaultNightMode(themeMode)
+        setDefaultNightMode(themeMode)
     }
 }
