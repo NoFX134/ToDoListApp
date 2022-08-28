@@ -10,6 +10,14 @@ import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.adevinta.android.barista.assertion.BaristaListAssertions.assertDisplayedAtPosition
+import com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertContains
+import com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
+import com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn
+import com.adevinta.android.barista.interaction.BaristaEditTextInteractions.typeTo
+import com.adevinta.android.barista.interaction.BaristaKeyboardInteractions.closeKeyboard
+import com.adevinta.android.barista.interaction.BaristaPickerInteractions.setDateOnPicker
+import com.adevinta.android.barista.interaction.BaristaSpinnerInteractions.clickSpinnerItem
 import org.hamcrest.Matchers.*
 import org.hamcrest.core.Is.`is`
 import org.junit.Rule
@@ -32,23 +40,15 @@ class ToDoItemListFragmentTest {
 
     @Test
     fun addNewTask() {
-        Thread.sleep(5000)
-        onView(withId(R.id.fab)).perform(click())
-        onView(withId(R.id.et_to_do)).perform(typeText("New Task #1"))
-        closeSoftKeyboard()
-        onView(withId(R.id.sp_importance)).perform(click())
-        onData(allOf(`is`(instanceOf(String::class.java)), `is`("!!Высокий"))).perform(click())
-        onView(withId(R.id.sw_date_picker)).perform(click())
-        onView(withClassName(equalTo(DatePicker::class.java.name))).perform(
-            PickerActions.setDate(
-                2022,
-                8,
-                29
-            )
-        )
-        onView(withText("OK")).perform(click())
-        onView(withId(R.id.tv_save)).perform(click())
-
+        clickOn(R.id.fab)
+        typeTo(R.id.et_to_do, "New Task #1")
+        closeKeyboard()
+        clickSpinnerItem(R.id.sp_importance, 1)
+        assertDisplayed("Низкий")
+        clickOn(R.id.sw_date_picker)
+        setDateOnPicker(2022, 9, 1)
+        clickOn(R.id.tv_save)
+        assertDisplayedAtPosition(R.id.rv_to_do_recycler_view, 0, R.id.tv_toDoText, "New Task #1");
     }
 }
 
