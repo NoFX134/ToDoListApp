@@ -1,11 +1,13 @@
-package ru.yandexschool.todolist
+package ru.yandexschool.todolist.presentation.ui
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import ru.yandexschool.todolist.presentation.ui.MainActivity
+import ru.yandexschool.todolist.presentation.ui.testrobot.addTask
+import ru.yandexschool.todolist.presentation.ui.testrobot.delete
+import ru.yandexschool.todolist.presentation.ui.testrobot.taskList
 
 /**
  * Instrumented test, which will execute on an Android device.

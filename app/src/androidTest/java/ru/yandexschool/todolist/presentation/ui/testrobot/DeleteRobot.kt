@@ -1,7 +1,6 @@
-package ru.yandexschool.todolist
+package ru.yandexschool.todolist.presentation.ui.testrobot
 
-import androidx.test.core.app.ApplicationProvider
-import java.text.FieldPosition
+import ru.yandexschool.todolist.R
 
 
 fun delete(func: DeleteRobot.() -> Unit) = DeleteRobot().apply { func() }

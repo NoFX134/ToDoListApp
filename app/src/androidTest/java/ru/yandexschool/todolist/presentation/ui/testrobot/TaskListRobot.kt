@@ -1,4 +1,6 @@
-package ru.yandexschool.todolist
+package ru.yandexschool.todolist.presentation.ui.testrobot
+
+import ru.yandexschool.todolist.R
 
 fun taskList(func: TaskListRobot.() -> Unit) = TaskListRobot().apply { func() }
 

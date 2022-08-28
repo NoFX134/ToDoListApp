@@ -1,6 +1,8 @@
-package ru.yandexschool.todolist
+package ru.yandexschool.todolist.presentation.ui.testrobot
 
 import androidx.test.core.app.ApplicationProvider
+import ru.yandexschool.todolist.App
+import ru.yandexschool.todolist.R
 
 fun addTask(func: AddTaskRobot.() -> Unit) = AddTaskRobot().apply { func() }
 

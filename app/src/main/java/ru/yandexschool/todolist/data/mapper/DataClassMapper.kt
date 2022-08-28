@@ -12,22 +12,14 @@ import javax.inject.Inject
  * The class is designed to convert data classes
  */
 
-class DataClassMapper @Inject constructor(private var application: Application) {
+class DataClassMapper @Inject constructor(private val application: Application) {
 
     @SuppressLint("HardwareIds")
     private val deviceId =
         Settings.Secure.getString(application.contentResolver, Settings.Secure.ANDROID_ID)
 
-    fun responseToDoIntoListToDoItem(remote: ResponseToDo): MutableList<ToDoItem> {
-        return remote.list.map { listItemIntoToDoItem(it) } as MutableList<ToDoItem>
-    }
-
     fun listToDoItemDtoIntoListToDoItem(list: List<ToDoItemDto>): List<ToDoItem> {
         return list.map { toDoItemDtoIntoToDoItem(it) }
-    }
-
-    fun responseToDoListToDoItemDto(remote: ResponseToDo): MutableList<ToDoItemDto> {
-        return remote.list.map { listItemIntoToDoItemDto(it) } as MutableList<ToDoItemDto>
     }
 
     fun listToDoItemDtoIntoResponseToDo(list: List<ToDoItemDto>): ResponseToDo {
@@ -57,23 +49,6 @@ class DataClassMapper @Inject constructor(private var application: Application) 
         )
     }
 
-    private fun listItemIntoToDoItem(listItem: ListItem): ToDoItem {
-        return ToDoItem(
-            id = listItem.id ?: UUID.randomUUID(),
-            text = listItem.text.toString(),
-            importance = when (listItem.importance) {
-                application.getString(R.string.importance_low) -> Importance.LOW
-                application.getString(R.string.importance_basic) -> Importance.BASIC
-                application.getString(R.string.importance_important) -> Importance.IMPORTANT
-                else -> Importance.BASIC
-            },
-            deadline = listItem.deadline?.let { Date(it) },
-            done = listItem.done,
-            createdAt = listItem.createdAt?.let { Date(it) },
-            changedAt = listItem.changedAt?.let { Date(it) },
-        )
-    }
-
     fun listItemIntoToDoItemDto(listItem: ListItem): ToDoItemDto {
         return ToDoItemDto(
             id = listItem.id ?: UUID.randomUUID(),
@@ -92,22 +67,6 @@ class DataClassMapper @Inject constructor(private var application: Application) 
 
     }
 
-    private fun toDoItemDtoIntoToDoItem(toDoItemDto: ToDoItemDto): ToDoItem {
-        return ToDoItem(
-            id = toDoItemDto.id,
-            text = toDoItemDto.text.toString(),
-            importance = when (toDoItemDto.importance) {
-                ImportanceDto.LOW -> Importance.LOW
-                ImportanceDto.BASIC -> Importance.BASIC
-                ImportanceDto.IMPORTANT -> Importance.IMPORTANT
-            },
-            deadline = toDoItemDto.deadline,
-            done = toDoItemDto.done ?: false,
-            createdAt = toDoItemDto.createdAt,
-            changedAt = toDoItemDto.changedAt,
-        )
-    }
-
     fun toDoItemIntoToDoItemDto(toDoItem: ToDoItem): ToDoItemDto {
         return ToDoItemDto(
             id = toDoItem.id,
@@ -121,6 +80,22 @@ class DataClassMapper @Inject constructor(private var application: Application) 
             done = toDoItem.done,
             createdAt = toDoItem.createdAt,
             changedAt = toDoItem.changedAt,
+        )
+    }
+
+    private fun toDoItemDtoIntoToDoItem(toDoItemDto: ToDoItemDto): ToDoItem {
+        return ToDoItem(
+            id = toDoItemDto.id,
+            text = toDoItemDto.text.toString(),
+            importance = when (toDoItemDto.importance) {
+                ImportanceDto.LOW -> Importance.LOW
+                ImportanceDto.BASIC -> Importance.BASIC
+                ImportanceDto.IMPORTANT -> Importance.IMPORTANT
+            },
+            deadline = toDoItemDto.deadline,
+            done = toDoItemDto.done ?: false,
+            createdAt = toDoItemDto.createdAt,
+            changedAt = toDoItemDto.changedAt,
         )
     }
 
