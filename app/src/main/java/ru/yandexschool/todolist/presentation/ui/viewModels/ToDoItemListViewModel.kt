@@ -1,5 +1,6 @@
 package ru.yandexschool.todolist.presentation.ui.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +32,7 @@ class ToDoItemListViewModel @Inject constructor(
         fetchToDoItem()
     }
 
-    fun fetchToDoItem() {
+    private fun fetchToDoItem() {
         viewModelScope.launch(Dispatchers.IO) {
             toDoItemRepository.fetchItem()
                 .collect { toDoItem ->
