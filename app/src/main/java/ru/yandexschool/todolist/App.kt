@@ -9,7 +9,7 @@ import ru.yandexschool.todolist.workers.UpdateWorkerFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class App : Application() {
+open class App : Application() {
 
     lateinit var appComponent: AppComponent
         private set

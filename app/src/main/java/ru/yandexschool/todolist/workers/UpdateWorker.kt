@@ -28,5 +28,6 @@ class UpdateWorker @AssistedInject constructor(
     interface Factory {
 
         fun create(appContext: Context, params: WorkerParameters): UpdateWorker
+
     }
 }
